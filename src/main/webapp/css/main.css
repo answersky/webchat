@@ -1,0 +1,340 @@
+html, body, h1, h2, h3, h4, h5, h6, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6,
+pre, code, form, fieldset, legend, input, button,
+textarea, p, blockquote, th, td {
+    font-family: 'Roboto', "Helvetica Neue",Helvetica,
+    "Segoe UI",Arial,"Microsoft YaHei",FreeSans,Arimo,
+    "Droid Sans","wenquanyi micro hei",sans-serif !important;
+}
+
+html {
+    scrollbar-arrow-color: #f4ae21; /*三角箭头的颜色*/
+    scrollbar-face-color: #333; /*立体滚动条的颜色*/
+    scrollbar-3dlight-color: #666; /*立体滚动条亮边的颜色*/
+    scrollbar-highlight-color: #666; /*滚动条空白部分的颜色*/
+    scrollbar-shadow-color: #999; /*立体滚动条阴影的颜色*/
+    scrollbar-darkshadow-color: #666; /*立体滚动条强阴影的颜色*/
+    scrollbar-track-color: #666; /*立体滚动条背景颜色*/
+    scrollbar-base-color: #f8f8f8; /*滚动条的基本颜色*/
+}
+
+body {
+    font-size: 15px;
+    line-height: 24px;
+}
+
+#App {
+    width: 100%;
+    height: 100%;
+    min-height: 971px;
+    overflow: hidden;
+    position: relative;
+    background: #eee;
+}
+
+.member-box, .left-box, .chat-box {
+    height: 100%;
+    min-height: 971px;
+    float: left;
+}
+
+.left-box {
+    width: 60px;
+    background: rgba(12, 137, 255, .9);
+    transition: all .45s cubic-bezier(.23, 1, .32, 1) 0ms;
+}
+
+.member-box {
+    width: 215px;
+    overflow-x: hidden;
+    /*overflow-y: scroll;*/
+    background: rgba(239, 240, 245, .6);
+}
+
+.member-list {
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.541176);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 48px;
+    padding-left: 16px;
+    width: 100%;
+    border-bottom: 1px solid #dddddd;
+}
+
+.member-list span {
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.541176);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 48px;
+    padding-left: 16px;
+    width: 100%;
+}
+
+.avatar {
+    background-color: #fff;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background-image: url('http://ooo.0o0.ooo/2016/10/18/5805c6b33b467.jpg');
+}
+
+.selfinfo-avatar {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 1800px) and (min-width: 900px) {
+    #chat-head {
+        width: 600px;
+        height: 55px;
+        background: hsla(0, 0%, 100%, .65034);
+    }
+
+    .chat-box {
+        min-width: 600px;
+    }
+
+    .input-content input {
+        width: 500px;
+        font-size: 1rem;
+        height: 33px;
+        margin-top: 2px;
+        padding-right: 29px;
+    }
+}
+
+@media screen and (max-width: 900px) and (min-width: 340px) {
+    #chat-head {
+        width: 400px;
+        height: 55px;
+        background: hsla(0, 0%, 100%, .65034);
+    }
+
+    .chat-box {
+        min-width: 400px;
+    }
+
+    .input-content input {
+        width: 400px;
+        font-size: 1rem;
+        height: 33px;
+        margin-top: 2px;
+        padding-right: 29px;
+    }
+}
+
+.chat-avatar {
+    font-weight: 600;
+    font-style: italic;
+    padding-left: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-image: url("http://oajmk96un.bkt.clouddn.com/lolo.jpg");
+    background-color: #fff;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    position: relative;
+    float: left;
+    margin-top: 9px;
+}
+
+.headbar-room-name {
+    font-weight: 600;
+    font-style: italic;
+    padding-left: 10px;
+    line-height: 55px;
+}
+
+#chat-content {
+    /*overflow-y: scroll;*/
+    padding-bottom: 2px;
+    min-height: 850px;
+    /*max-height: 850px;*/
+}
+
+@media screen and (min-width: 1920px) {
+    #chat-head {
+        width: 1623px;
+        height: 55px;
+        background: hsla(0, 0%, 100%, .65034);
+    }
+
+    .chat-box {
+        min-width: 1623px;
+    }
+
+    .input-content input {
+        width: 1024px;
+        font-size: 1rem;
+        height: 33px;
+        margin-top: 2px;
+        padding-right: 29px;
+    }
+}
+.listitem-li{
+    padding-left: 10px;
+}
+.room{
+    border-radius: 5px;
+    cursor: pointer;
+}
+.room:hover{
+    background: #f8f9fa;
+}
+.room_select{
+    background: #f8f9fa;
+}
+
+.face{
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-image: url("../css/img/face1.png");
+}
+.face:hover{
+    background-image: url("../css/img/face2.png");
+}
+.send{
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-image: url("../css/img/send1.png");
+}
+.send:hover{
+    background-image: url("../css/img/send2.png");
+}
+.pic{
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-image: url("../css/img/pic1.png");
+}
+.pic:hover{
+    background-image: url("../css/img/pic2.png");
+}
+
+.heardPic{
+    float:left;
+    margin: 5px 0 5px 10px;
+    width: 40px;
+    height: 40px;
+    background-image: url("http://oajmk96un.bkt.clouddn.com/lolo.jpg");
+}
+
+
+
+.message-container {
+    width: 100%;
+    /*max-width: 980px;*/
+    padding: 10px 6px 0 12px;
+}
+.avatar-container {
+    margin-top: 5px;
+}
+.message {
+    position: relative;
+    display: inline-block;
+    word-break: break-all;
+    background: #fff;
+    text-align: left;
+    padding: 6px 12px;
+    max-width: 95%;
+    min-height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.triangle-left-outer {
+    left: -9px;
+    border-right: 10px solid #ccc;
+    top: 5px;
+}
+.triangle-left-inner, .triangle-left-outer {
+    content: "";
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+    position: absolute;
+    border-top: 2px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+.triangle-left-inner, .triangle-left-outer {
+    content: "";
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+    position: absolute;
+    border-top: 2px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+.triangle-left-inner {
+    left: -7px;
+    border-right: 10px solid #fff;
+    top: 6px;
+}
+
+.triangle-right-outer {
+    right: -9px;
+    border-left: 10px solid #ccc;
+    top: 5px;
+}
+.triangle-right-inner, .triangle-right-outer {
+    content: "";
+    -webkit-transform: rotate(-20deg);
+    transform: rotate(-20deg);
+    position: absolute;
+    border-top: 2px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+.triangle-right-inner, .triangle-right-outer {
+    content: "";
+    -webkit-transform: rotate(-20deg);
+    transform: rotate(-20deg);
+    position: absolute;
+    border-top: 2px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+.triangle-right-inner {
+    right: -7px;
+    border-left: 10px solid #fff;
+    top: 6px;
+}
+
+.icon {
+    position: fixed;
+    margin-top: -230px;
+    width: 520px;
+    height: 220px;
+    display: inline-block;
+    background-color: #fff;
+    z-index: 8900;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.arrow {
+    width: 13px;
+    height: 8px;
+    background: url(/css/img/price_arrow.gif) no-repeat;
+    position: absolute;
+    z-index: 8901;
+    top: -8px;
+    left: 50px;
+}
+
+ul li {
+    float: left;
+}
+
+img {
+    height: 120px;
+    cursor: pointer;
+}
