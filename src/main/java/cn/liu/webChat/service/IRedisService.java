@@ -1,7 +1,5 @@
 package cn.liu.webChat.service;
 
-import cn.qegoo.model.oms.User;
-
 import java.util.List;
 import java.util.Map;
 
