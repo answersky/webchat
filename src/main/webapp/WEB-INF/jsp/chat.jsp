@@ -20,10 +20,12 @@
             <!--对方聊天记录 -->
             <div data-flex="dir:left" class="message-list-item">
                 <div data-flex="dir:left" data-flex-box="0" class="message-container" style="height: auto">
-                    <div data-flex-box="0" data-flex="main:top cross:top" class="avatar-container" style="float: left">
+                    <div data-flex-box="0" data-flex="main:top cross:top" class="avatar-container"
+                         style="float: left">
                         <div>
                             <div class="avatar"
-                                 style="width: 39px; height: 39px; background-image: url('http://ooo.0o0.ooo/2016/11/27/583a528079b87.png');"></div>
+                                 style="width: 39px; height: 39px;
+                                         background-image: url('${pageContext.request.contextPath}/css/img/toux.jpg');"></div>
                         </div>
                     </div>
                     <div style="padding: 0px 50px; width: 100%; text-align: left;">

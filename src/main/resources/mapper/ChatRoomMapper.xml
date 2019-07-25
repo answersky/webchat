@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.liu.webChat.mybatis_dao.IChatRoomDao">
+    <insert id="saveChatRoom" useGeneratedKeys="true" keyProperty="id">
+        insert into chat_room (id,room_name,limit_num,is_group,create_time,create_user,update_time,update_user)
+        VALUES (#{id},#{room_name},#{limit_num},#{is_group},#{create_time},#{create_user},#{update_time},#{update_user});
+    </insert>
+
+    <select id="countPersonOfChatRoom" resultType="Integer">
+        select count(1) from room_user where room_id=#{roomId}
+    </select>
+
+    <insert id="saveRoomUser">
+        insert into room_user (id,room_id,user_id,create_time,is_admin,create_user)
+        VALUES (#{id},#{room_id},#{user_id},#{create_time},#{is_admin},#{create_user})
+    </insert>
+
+    <select id="findRoomUserByRoomId" resultType="cn.liu.webChat.domain.RoomUser">
+        select * from room_user where room_id=#{roomId}
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.liu.webChat.mybatis_dao.IRoomMsgDao">
+    <insert id="saveMsg">
+        insert into room_msg (room_id,user_id,msg,time_str,create_time)
+        VALUES (#{room_id},#{user_id},#{msg},#{time_str},#{create_time});
+    </insert>
+
+    <select id="initMsg" resultType="cn.liu.webChat.domain.RoomMsg">
+        select * from room_msg where room_id=#{roomId}
+        order by create_time desc limit #{index},20
+    </select>
+
+    <select id="realTimeMsg" resultType="cn.liu.webChat.domain.RoomMsg">
+        select * from room_msg where room_id=#{roomId} and time_str>#{lastTimeStr}
+    </select>
+</mapper>

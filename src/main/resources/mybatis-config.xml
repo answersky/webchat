@@ -12,6 +12,9 @@
     </typeAliases>
     <mappers>
         <mapper resource="mapper/UserMessageMapper.xml"/>
+        <mapper resource="mapper/ChatRoomMapper.xml"/>
+        <mapper resource="mapper/RoomMsgMapper.xml"/>
+        <mapper resource="mapper/UserInfoMapper.xml"/>
     </mappers>
 
 </configuration>

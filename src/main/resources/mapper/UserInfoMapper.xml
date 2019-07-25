@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.liu.webChat.mybatis_dao.IUserInfoDao">
+    <insert id="saveUserInfo">
+        insert into user_info (username,password,phone,nickname,age,address,photo_address,create_time)
+        VALUES (#{username},#{password},#{phone},#{nickname},#{age},#{address},#{photo_address},#{create_time});
+    </insert>
+
+    <select id="findUserInfo" resultType="cn.liu.webChat.domain.UserInfo">
+        select * from user_info where id=#{id}
+    </select>
+
+</mapper>

@@ -4,6 +4,7 @@ import java.util.Date;
 
 /**
  * Created by liuf on 2017/1/14.
+ * 用户消息记录
  */
 public class UserMessage {
     private Long id;

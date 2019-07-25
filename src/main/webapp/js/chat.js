@@ -95,7 +95,7 @@ function sendMsg(roomId, msg) {
             "<div data-flex='dir:right' data-flex-box='0' class='message-container' style='height: auto'>" +
             "<div data-flex-box='0' data-flex='main:top cross:top' class='avatar-container' style='float: right'>" +
             "<div>" +
-            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;http://oajmk96un.bkt.clouddn.com/lolo.jpg&quot;);'></div>" +
+            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;${pageContext.request.contextPath}/css/img/toux.jpg&quot;);'></div>" +
             "</div>" +
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: right;'>" +
@@ -121,7 +121,7 @@ function sendMsg(roomId, msg) {
 function sendToMsg(roomId, user, msg) {
     $.ajax({
         type: "post",
-        url: "/sendMessage",
+        url: "/msg/sendMessage",
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
         data: {
             roomId: roomId,

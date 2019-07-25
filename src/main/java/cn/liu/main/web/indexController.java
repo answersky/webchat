@@ -95,15 +95,12 @@ public class indexController {
     @RequestMapping("receiveMsg")
     @ResponseBody
     public  Map<String, String> receiveMsg(long timeStr) {
-        Map<String, String> map=new LinkedHashMap<>();
         Message message=getMessage(2,timeStr);
-        if(message!=null){
-            map=message.getMap();
-            if(map.size()>0){
-                long time=message.getTime();
-                map.put("timeStr",time+"");
-                return map;
-            }
+        Map<String, String> map = message.getMap();
+        if (map != null && map.size() > 0) {
+            long time = message.getTime();
+            map.put("timeStr", time + "");
+            return map;
         }
         return null;
     }
@@ -121,12 +118,5 @@ public class indexController {
         return "chat";
     }
 
-
-    @RequestMapping("sendMessage")
-    @ResponseBody
-    public String sendMessage(String roomId, String user, String msg) {
-        boolean flag = messageService.saveMessage(roomId,user,msg);
-        return String.valueOf(flag);
-    }
 
 }

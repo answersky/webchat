@@ -3,21 +3,10 @@ package cn.liu.webChat.service.impl;
 import cn.liu.webChat.dao.IRedisDao;
 import cn.liu.webChat.domain.Message;
 import cn.liu.webChat.service.IMessageService;
-import com.google.gson.reflect.TypeToken;
-import dev.xwolf.framework.common.util.StringUtils;
-import dev.xwolf.framework.common.utils.JSONUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by xcy
@@ -54,7 +43,8 @@ public class MessageServiceImpl implements IMessageService{
      * @param timeStr 上一次拿消息的时间戳
      * @return 返回新消息
      */
-    public Message getMessage(String roomId,int status,long timeStr){
+    @Override
+    public Message getMessage(String roomId, int status, long timeStr){
         Message message=new Message();
         Map<String,String> map= (Map<String, String>) redisDao.findFromRedis(roomId);
         if(map!=null && map.size()>0){
@@ -68,13 +58,15 @@ public class MessageServiceImpl implements IMessageService{
             }else {
                 //根据时间戳来获取消息，那上次时间戳以后的全部消息记录
                 Map<String,String> infoMap=new LinkedHashMap<>();
-                map.forEach((user,msg)->{
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    String user = entry.getKey();
+                    String msg = entry.getValue();
                     long time=Long.parseLong(user.split("_")[1]);
                     //新消息
                     if(time>timeStr){
                         infoMap.put(user,msg);
                     }
-                });
+                }
                 long times=getTimes(infoMap);
                 message.setMap(infoMap);
                 message.setTime(times);
