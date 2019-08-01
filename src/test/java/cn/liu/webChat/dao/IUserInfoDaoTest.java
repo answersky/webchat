@@ -36,4 +36,10 @@ public class IUserInfoDaoTest {
         userInfo.setCreate_time(new Date());
         userInfoDao.saveUserInfo(userInfo);
     }
+
+    @Test
+    public void findUserInfo() {
+        UserInfo userInfo = userInfoDao.findUserByUsername("answer");
+        System.out.println(userInfo);
+    }
 }

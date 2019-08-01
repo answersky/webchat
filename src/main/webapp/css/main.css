@@ -30,7 +30,7 @@ body {
 #App {
     width: 100%;
     height: 100%;
-    min-height: 971px;
+    /*min-height: 971px;*/
     overflow: hidden;
     position: relative;
     background: #eee;
@@ -38,7 +38,7 @@ body {
 
 .member-box, .left-box, .chat-box {
     height: 100%;
-    min-height: 971px;
+    min-height: 650px;
     float: left;
 }
 
@@ -114,7 +114,7 @@ body {
 
 @media screen and (max-width: 900px) and (min-width: 340px) {
     #chat-head {
-        width: 400px;
+        width: 100%;
         height: 55px;
         background: hsla(0, 0%, 100%, .65034);
     }
@@ -227,7 +227,7 @@ body {
     margin: 5px 0 5px 10px;
     width: 40px;
     height: 40px;
-    background-image: url("img/toux.jpg");
+    background-image: url("img/bee.jpg");
 }
 
 

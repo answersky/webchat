@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -42,7 +43,7 @@ public class ChatRoomServiceImpl implements IChatRoomService {
         //个人聊天
         chatRoom.setRoom_name(obj.getUsername());
         //上限2人
-        chatRoom.setLimit(2);
+        chatRoom.setLimit_num(2);
         chatRoom.setIs_group(singleChat);
         chatRoom.setCreate_time(new Date());
         chatRoom.setCreate_user(userInfo.getUsername());
@@ -67,7 +68,7 @@ public class ChatRoomServiceImpl implements IChatRoomService {
         //建群
         chatRoom.setRoom_name(adminId + userId + "");
         //群上限200人
-        chatRoom.setLimit(200);
+        chatRoom.setLimit_num(200);
         chatRoom.setIs_group(groupChat);
         chatRoom.setCreate_time(new Date());
         chatRoom.setCreate_user(userInfo.getUsername());
@@ -98,5 +99,10 @@ public class ChatRoomServiceImpl implements IChatRoomService {
         roomUser.setCreate_user(username);
         roomUser.setIs_admin(is_admin);
         chatRoomDao.saveRoomUser(roomUser);
+    }
+
+    @Override
+    public List<Map<String, Object>> findChatRoom(Integer userId) {
+        return chatRoomDao.findChatRooms(userId);
     }
 }

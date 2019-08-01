@@ -1,9 +1,17 @@
 package cn.liu.main.web;
 
+import cn.liu.webChat.domain.ChatRoom;
 import cn.liu.webChat.domain.Message;
+import cn.liu.webChat.domain.RoomMsg;
+import cn.liu.webChat.domain.UserInfo;
+import cn.liu.webChat.mybatis_dao.IChatRoomDao;
+import cn.liu.webChat.service.IChatMessageService;
+import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IMessageService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,27 +32,43 @@ import java.util.Map;
 public class indexController {
     @Resource
     private IMessageService messageService;
+    @Resource
+    private IChatRoomService chatRoomService;
+    @Resource
+    private IChatMessageService chatMessageService;
 
     public static List<String> roomList = new ArrayList<>();
 
     @RequestMapping("index")
     public String index(Model model, HttpServletRequest request) {
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:dd:ss");
-        Date date = new Date();
-        roomList = new ArrayList<>();
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        List<Map<String, Object>> chatRooms = chatRoomService.findChatRoom(userId);
+        if (!CollectionUtils.isEmpty(chatRooms)) {
+            Map<String, Object> chatRoom = chatRooms.get(0);
+            Integer roomId = Integer.valueOf(String.valueOf(chatRoom.get("id")));
+            model.addAttribute("roomId", roomId);
+            model.addAttribute("room", chatRoom);
+            List<Map<String, Object>> roomMsgs = chatMessageService.initMessage(roomId, 0);
+            if (!CollectionUtils.isEmpty(roomMsgs)) {
+                Map<String, Object> roomMsg = roomMsgs.get(0);
+                model.addAttribute("timeStr", roomMsg.get("time_str"));
+                //保证消息展示的顺序是正常（按照时间先后）
+                roomMsgs = Lists.reverse(roomMsgs);
+                model.addAttribute("messages", roomMsgs);
+            } else {
+                model.addAttribute("timeStr", "0");
+            }
 
-        Message message=getMessage(1,0);
-        if(message!=null){
-            Map<String,String> mapMap=message.getMap();
-            long timeStr=message.getTime();
-            model.addAttribute("maps",mapMap);
-            model.addAttribute("timeStr",timeStr);
         }
 
-        model.addAttribute("time", sdf.format(date));
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
         String username= (String) request.getSession().getAttribute("username");
         model.addAttribute("username",username);
-        model.addAttribute("roomId","12");
+        model.addAttribute("nickname", userInfo.getNickname());
+        model.addAttribute("rooms", chatRooms);
         return "index";
     }
 
@@ -91,19 +115,6 @@ public class indexController {
         }
     }
 
-
-    @RequestMapping("receiveMsg")
-    @ResponseBody
-    public  Map<String, String> receiveMsg(long timeStr) {
-        Message message=getMessage(2,timeStr);
-        Map<String, String> map = message.getMap();
-        if (map != null && map.size() > 0) {
-            long time = message.getTime();
-            map.put("timeStr", time + "");
-            return map;
-        }
-        return null;
-    }
 
     @RequestMapping("addRoom")
     public String addRoom(Model model, String roomId, String user, String msg) {

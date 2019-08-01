@@ -18,4 +18,10 @@
     <select id="findRoomUserByRoomId" resultType="cn.liu.webChat.domain.RoomUser">
         select * from room_user where room_id=#{roomId}
     </select>
+
+    <select id="findChatRooms" resultType="Map">
+        select a.* from chat_room a left join room_user b on
+        a.id=b.room_id
+        where b.user_id=#{userId} order by a.id desc
+    </select>
 </mapper>

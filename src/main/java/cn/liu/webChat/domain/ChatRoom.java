@@ -7,7 +7,7 @@ import java.util.Date;
  * created by liufeng
  * 2019/7/25
  */
-public class ChatRoom implements Serializable {
+public class ChatRoom {
     private Integer id;
     private String room_name;
     private int limit_num;

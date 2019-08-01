@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap/bootstrap.min.css">
@@ -27,30 +28,15 @@
             <div class="friendlist-list-box">
                 <ul class="friendlist-ul">
                     <div class="chatRoom">
-                        <li class="room room_select">
-                            <div style="height: 50px;width: 160px">
-                                <div class="avatar heardPic"></div>
-                                <div style="padding: 15px 0 18px 60px;font-weight: 200;"><span>chat</span></div>
-                            </div>
-                        </li>
-                        <%--<li class="room">
-                            <div style="height: 50px;width: 160px">
-                                <div class="avatar heardPic"></div>
-                                <div style="padding: 15px 0 18px 60px;font-weight: 200;"><span>DASDAS</span></div>
-                            </div>
-                        </li>
-                        <li class="room">
-                            <div style="height: 50px;width: 160px">
-                                <div class="avatar heardPic"></div>
-                                <div style="padding: 15px 0 18px 60px;font-weight: 200;"><span>DASDAS</span></div>
-                            </div>
-                        </li>
-                        <li class="room">
-                            <div style="height: 50px;width: 160px">
-                                <div class="avatar heardPic"></div>
-                                <div style="padding: 15px 0 18px 60px;font-weight: 200;"><span>DASDAS</span></div>
-                            </div>
-                        </li>--%>
+                        <c:forEach items="${rooms}" var="room">
+                            <li class="room room_select">
+                                <div style="height: 50px;width: 160px">
+                                    <div class="avatar heardPic"></div>
+                                    <div style="padding: 15px 0 18px 60px;font-weight: 200;">
+                                        <span>${room.room_name}</span></div>
+                                </div>
+                            </li>
+                        </c:forEach>
                     </div>
                 </ul>
             </div>

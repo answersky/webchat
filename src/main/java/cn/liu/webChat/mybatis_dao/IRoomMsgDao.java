@@ -4,6 +4,7 @@ import cn.liu.webChat.domain.RoomMsg;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -12,7 +13,7 @@ import java.util.List;
 public interface IRoomMsgDao {
     void saveMsg(RoomMsg roomMsg);
 
-    List<RoomMsg> initMsg(@Param("roomId") Integer roomId, @Param("page") int page);
+    List<Map<String, Object>> initMsg(@Param("roomId") Integer roomId, @Param("index") int page);
 
-    List<RoomMsg> realTimeMsg(@Param("roomId") Integer roomId, @Param("lastTimeStr") Long lastTimeStr);
+    List<Map<String, Object>> realTimeMsg(@Param("roomId") Integer roomId, @Param("userId") Integer userId, @Param("lastTimeStr") Long lastTimeStr);
 }

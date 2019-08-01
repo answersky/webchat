@@ -88,19 +88,19 @@ function isImg(msg) {
 }
 
 function sendMsg(roomId, msg) {
-    var me=$("#username").val();
-    var time = new Date().Format("hh:mm:ss");
+    var me = $("#nickname").val();
+    var time = new Date().Format("yyyy-MM-dd hh:mm:ss");
     if (msg.length > 0) {
         var model = "<div data-flex='dir:right' class='message-list-item'>" +
             "<div data-flex='dir:right' data-flex-box='0' class='message-container' style='height: auto'>" +
             "<div data-flex-box='0' data-flex='main:top cross:top' class='avatar-container' style='float: right'>" +
             "<div>" +
-            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;${pageContext.request.contextPath}/css/img/toux.jpg&quot;);'></div>" +
+            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;/css/img/toux.jpg&quot;);'></div>" +
             "</div>" +
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: right;'>" +
             "<span class='message-nickname-box' style='display: block;'>" +
-            "<span class='message-nickname'>me </span>" +
+            "<span class='message-nickname'>" + me + "</span>" +
             "<span>" + time + "</span>" +
             "</span>" +
             "<div class='message'>" +
@@ -114,22 +114,21 @@ function sendMsg(roomId, msg) {
         scrollBottom(roomId);
         $("#inputBox" + roomId).val("");
 
-        sendToMsg(roomId, me, msg);
+        sendToMsg(roomId, msg);
     }
 }
 
-function sendToMsg(roomId, user, msg) {
+function sendToMsg(roomId, msg) {
     $.ajax({
         type: "post",
         url: "/msg/sendMessage",
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
         data: {
             roomId: roomId,
-            user: user,
             msg: msg
         },
         success: function (data) {
-            if (data == "true") {
+            if (data == "0") {
                 console.log("消息发送成功");
             } else {
                 console.log("消息发送失败");
@@ -150,8 +149,8 @@ function scrollBottom(roomId) {
 //控制滚动条样式，在没有超出范围高度的时候隐藏滚动条样式
 function checkScrollStyle(roomId) {
     var height = $("#chat-content" + roomId).height();
-    if (height > 850) {
-        $("#chat-content" + roomId).css({"overflow-y": "scroll", "max-height": "850px"});
+    if (height > 560) {
+        $("#chat-content" + roomId).css({"overflow-y": "scroll", "max-height": "560px"});
     }
 }
 
@@ -177,27 +176,33 @@ Date.prototype.Format = function (fmt) {
 var checkRoom = window.setInterval(function () {
     var me=$("#username").val();
     var timeStr=$("#timeStr").val();
+    var roomId = $("#roomId").val();
     console.log("定时器检查是否有新消息，上一次的时间戳："+timeStr);
     // 定时接收消息
     $.ajax({
         type: "post",
-        url: "/receiveMsg",
+        url: "/msg/receiveMsg",
         data:{
-            timeStr:timeStr
+            timeStr: timeStr,
+            roomId: roomId
         },
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
         success: function (data) {
             if(data!=null && typeof(data)!="undefined" && data!=''){
-                var time=data['timeStr'];
-                console.log(time);
-                $("#timeStr").val(time);
-                for(user in data){
-                    var msg = data[user];
-                    var username=user.split("_")[0];
-                    if(username!=me && username!='timeStr'){
-                        receiveMsg(12, username, msg);
+                var status = data['status'];
+                var message = data['message'];
+                console.log(message);
+                if (status == '0') {
+                    var time = data['timeStr'];
+                    $("#timeStr").val(time);
+                    var msgList = data['datas'];
+                    for (var i = 0; i < msgList.length; i++) {
+                        var msg = msgList[i];
+                        var user = msg.nickname;
+                        receiveMsg(roomId, user, msg);
                     }
                 }
+
             }
         }
     });
@@ -205,15 +210,16 @@ var checkRoom = window.setInterval(function () {
 }, 3000);
 
 //接收消息
-function receiveMsg(roomId, user, msg) {
-    var time = new Date().Format("hh:mm:ss");
+function receiveMsg(roomId, user, message) {
+    var time = message.create_time;
+    var msg = message.msg;
     if (msg.length > 0) {
         var html = "<div data-flex='dir:left' class='message-list-item'>" +
             "<div data-flex='dir:left' data-flex-box='0' class='message-container' style='height: auto'>" +
             "<div data-flex-box='0' data-flex='main:top cross:top' class='avatar-container' style='float: left'>" +
             "<div>" +
             "<div class='avatar'" +
-            "style='width: 39px; height: 39px; background-image: url(&quot;http://ooo.0o0.ooo/2016/11/27/583a528079b87.png&quot;);'></div>" +
+            "style='width: 39px; height: 39px; background-image: url(&quot;/css/img/toux.jpg&quot;);'></div>" +
             "</div>" +
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: left;'>" +

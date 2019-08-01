@@ -2,6 +2,9 @@ package cn.liu.webChat.service;
 
 import cn.liu.webChat.domain.ChatRoom;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * created by liufeng
  * 2019/7/25
@@ -30,4 +33,6 @@ public interface IChatRoomService {
      * @param userId
      */
     void addMember(Integer roomId, Integer userId, String username, String is_admin);
+
+    List<Map<String, Object>> findChatRoom(Integer userId);
 }

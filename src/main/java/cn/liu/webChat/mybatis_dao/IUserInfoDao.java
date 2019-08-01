@@ -10,4 +10,6 @@ public interface IUserInfoDao {
     void saveUserInfo(UserInfo userInfo);
 
     UserInfo findUserInfo(Integer id);
+
+    UserInfo findUserByUsername(String username);
 }

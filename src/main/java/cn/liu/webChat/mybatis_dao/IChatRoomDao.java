@@ -4,6 +4,7 @@ import cn.liu.webChat.domain.ChatRoom;
 import cn.liu.webChat.domain.RoomUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -17,4 +18,6 @@ public interface IChatRoomDao {
     void saveRoomUser(RoomUser roomUser);
 
     List<RoomUser> findRoomUserByRoomId(Integer roomId);
+
+    List<Map<String, Object>> findChatRooms(Integer userId);
 }

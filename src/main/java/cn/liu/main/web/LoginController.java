@@ -1,8 +1,12 @@
 package cn.liu.main.web;
 
+import cn.liu.webChat.domain.UserInfo;
+import cn.liu.webChat.mybatis_dao.IUserInfoDao;
+import cn.liu.webChat.service.IUserInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -10,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class LoginController {
+    @Resource
+    private IUserInfoService userInfoService;
+
     @RequestMapping("login")
     public String loginPage(){
         return "login";
@@ -22,7 +29,13 @@ public class LoginController {
 
     @RequestMapping("/toLogin")
     public String toIndex(HttpServletRequest request,String username, String password){
-        request.getSession().setAttribute("username",username);
-        return "redirect:/index";
+        UserInfo userInfo = userInfoService.findUserByUsername(username);
+        if (userInfo != null) {
+            request.getSession().setAttribute("username", username);
+            request.getSession().setAttribute("userId", userInfo.getId());
+            request.getSession().setAttribute("userInfo", userInfo);
+            return "redirect:/index";
+        }
+        return "redirect:/login";
     }
 }

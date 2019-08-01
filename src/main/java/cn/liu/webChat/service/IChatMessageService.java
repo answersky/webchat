@@ -3,6 +3,7 @@ package cn.liu.webChat.service;
 import cn.liu.webChat.domain.RoomMsg;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -12,7 +13,8 @@ public interface IChatMessageService {
 
     void saveMessage(RoomMsg roomMsg);
 
-    List<RoomMsg> initMessage(Integer roomId, int page);
+    List<Map<String, Object>> initMessage(Integer roomId, int page);
 
-    List<RoomMsg> findMessage(Integer roomId, Long lastTime);
+    List<Map<String, Object>> findMessage(Integer roomId, Integer userId, Long lastTime);
+
 }
