@@ -38,4 +38,12 @@ public class LoginController {
         }
         return "redirect:/login";
     }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().setAttribute("username", "");
+        request.getSession().setAttribute("userId", "");
+        request.getSession().setAttribute("userInfo", "");
+        return "redirect:/login";
+    }
 }

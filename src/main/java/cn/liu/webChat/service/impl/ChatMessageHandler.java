@@ -151,4 +151,9 @@ public class ChatMessageHandler extends TextWebSocketHandler {
         logger.error(username + "退出聊天");
     }
 
+    /*public void clearSessionByUserId(Integer userId,String username){
+        sessionMap.remove(userId);
+        logger.error(username + "退出聊天");
+    }*/
+
 }

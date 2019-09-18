@@ -13,4 +13,8 @@
     <select id="findUserByUsername" resultType="cn.liu.webChat.domain.UserInfo">
         select * from user_info where username=#{username}
     </select>
+
+    <select id="findUserByNickname" resultType="cn.liu.webChat.domain.UserInfo">
+        select * from user_info where nickname like '%${nickname}%'
+    </select>
 </mapper>

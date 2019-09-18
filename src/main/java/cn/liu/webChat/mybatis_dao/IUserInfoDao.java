@@ -1,6 +1,9 @@
 package cn.liu.webChat.mybatis_dao;
 
 import cn.liu.webChat.domain.UserInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * created by liufeng
@@ -12,4 +15,6 @@ public interface IUserInfoDao {
     UserInfo findUserInfo(Integer id);
 
     UserInfo findUserByUsername(String username);
+
+    List<UserInfo> findUserByNickname(@Param("nickname") String nickname);
 }

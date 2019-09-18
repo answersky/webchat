@@ -6,6 +6,7 @@ import cn.liu.webChat.service.IUserInfoService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * created by liufeng
@@ -19,5 +20,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Override
     public UserInfo findUserByUsername(String username) {
         return userInfoDao.findUserByUsername(username);
+    }
+
+    @Override
+    public List<UserInfo> findUserByNickname(String nickname) {
+        return userInfoDao.findUserByNickname(nickname);
     }
 }

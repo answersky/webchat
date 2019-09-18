@@ -1,6 +1,5 @@
 var socket = new SockJS('http://' + document.location.host + '/sockjs/webSocketServer');
 $(document).ready(function () {
-
     //聊天窗口切换点击事件
     $(".room").click(function (e) {
         $(".room").removeClass("room_select");
@@ -151,23 +150,6 @@ function sendToMsg(roomId, msg) {
     } else {
         alert("连接失败!");
     }
-    /*$.ajax({
-        type: "post",
-        url: "/msg/sendMessage",
-        contentType: "application/x-www-form-urlencoded;charset=utf-8",
-        data: {
-            roomId: roomId,
-            msg: msg
-        },
-        success: function (data) {
-            if (data == "0") {
-                console.log("消息发送成功");
-            } else {
-                console.log("消息发送失败");
-            }
-        }
-
-    });*/
 }
 
 
@@ -266,4 +248,69 @@ function receiveMsg(roomId, user, time, msg) {
         checkScrollStyle(roomId);
         scrollBottom(roomId);
     }
+}
+
+//头部搜索
+function searchUser() {
+    var key = $.trim($("#i-advanced-search").val());
+    if (key == null || key == '') {
+        $("#tip").text("请输入朋友昵称");
+        $("#tipModal").modal();
+        return;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/userInfo/findUserByNickname",
+        data: {
+            nickname: key
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data != null && typeof(data) != "undefined" && data != '') {
+                var status = data['status'];
+                if (status == '0') {
+                    var userinfos = data['datas'];
+                    $("#search_result div.chatRoom").html("");
+                    for (var i = 0; i < userinfos.length; i++) {
+                        //展示选择项
+                        var username = userinfos[i].username;
+                        var userId = userinfos[i].id;
+                        var html = '<li class="room room_select" onclick="createRoom(' + userId + ')">' +
+                            '                                    <div style="height: 50px;width:180px">' +
+                            '                                        <div class="avatar heardPic"></div>' +
+                            '                                        <span>' + username + '</span>' +
+                            '                                    </div>' +
+                            '                                </li>';
+                        $("#search_result div.chatRoom").append(html);
+                    }
+                    $("#search_result").show();
+                }
+                if (status == '2') {
+                    $("#tip").text(data['message']);
+                    $("#tipModal").modal();
+                }
+
+            }
+        }
+    });
+}
+
+function createRoom(userId) {
+    $.ajax({
+        type: "post",
+        url: "/userInfo/createSingleRoom",
+        data: {
+            userId: userId
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data == '0') {
+                //todo 展示会话
+            } else {
+                $("#tip").text("创建对话失败");
+                $("#tipModal").modal();
+            }
+        }
+    });
 }
