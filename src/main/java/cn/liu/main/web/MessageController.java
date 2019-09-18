@@ -20,6 +20,7 @@ import java.util.Map;
 /**
  * created by liufeng
  * 2019/7/24
+ * 纯java实现的聊天（old version）
  */
 @Controller
 @RequestMapping("/msg")
@@ -28,6 +29,7 @@ public class MessageController {
     @Resource
     private IChatMessageService chatMessageService;
 
+    @Deprecated
     @RequestMapping("sendMessage")
     @ResponseBody
     public String sendMessage(HttpServletRequest request, Integer roomId, String msg) {
@@ -46,6 +48,7 @@ public class MessageController {
         return ResponseStatus.SUCCESS;
     }
 
+    @Deprecated
     @RequestMapping("receiveMsg")
     @ResponseBody
     public Map<String, Object> receiveMsg(HttpServletRequest request, long timeStr, Integer roomId) {

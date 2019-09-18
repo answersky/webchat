@@ -72,11 +72,6 @@ public class indexController {
         return "index";
     }
 
-    private Message getMessage(int status,long time){
-        // 接收消息（消息带上聊天室id）
-        Message message= messageService.getMessage("room_id_12",status,time);
-        return message;
-    }
 
     @RequestMapping("checkRoom")
     @ResponseBody

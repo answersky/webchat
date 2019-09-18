@@ -9,7 +9,9 @@
             src="${pageContext.request.contextPath}/webjars/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript"
             src="${pageContext.request.contextPath}/js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/sockjs.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/chat.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/websockt_heart_beat.js"></script>
     <title>webchat</title>
 </head>
 <body>

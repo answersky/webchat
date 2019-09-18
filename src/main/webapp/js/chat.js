@@ -1,3 +1,4 @@
+var socket = new SockJS('http://' + document.location.host + '/sockjs/webSocketServer');
 $(document).ready(function () {
 
     //聊天窗口切换点击事件
@@ -23,6 +24,27 @@ $(document).ready(function () {
     });
 
 });
+
+//打开连接
+socket.onopen = function () {
+    console.log('websocket 连接成功');
+};
+
+//接收消息
+socket.onmessage = function (msg) {
+    var info = JSON.parse(msg.data);
+    console.log("msg", msg.data);
+    var roomId = info.roomId;
+    var nickname = info.nickname;
+    var time = info.create_time;
+    var message = info.message;
+    receiveMsg(roomId, nickname, time, message);
+};
+
+//连接关闭
+socket.onclose = function () {
+    console.log("websocket close");
+};
 
 //发送快捷键 回车
 function sendInfo(roomId) {
@@ -100,7 +122,7 @@ function sendMsg(roomId, msg) {
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: right;'>" +
             "<span class='message-nickname-box' style='display: block;'>" +
-            "<span class='message-nickname'>" + me + "</span>" +
+            "<span class='message-nickname'>" + me + " </span>" +
             "<span>" + time + "</span>" +
             "</span>" +
             "<div class='message'>" +
@@ -119,7 +141,17 @@ function sendMsg(roomId, msg) {
 }
 
 function sendToMsg(roomId, msg) {
-    $.ajax({
+    if (socket.readyState == 1) {
+        var data = {
+            roomId: roomId,
+            msg: msg
+        };
+        //调用后台handleTextMessage方法
+        socket.send(JSON.stringify(data));
+    } else {
+        alert("连接失败!");
+    }
+    /*$.ajax({
         type: "post",
         url: "/msg/sendMessage",
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -135,9 +167,8 @@ function sendToMsg(roomId, msg) {
             }
         }
 
-    });
+    });*/
 }
-
 
 
 //聊天出现滚动条时，保证滚动条处于最底部
@@ -173,7 +204,7 @@ Date.prototype.Format = function (fmt) {
 
 
 /*=========================实时监控是否有新的聊天加入=====================================*/
-var checkRoom = window.setInterval(function () {
+/*var checkRoom = window.setInterval(function () {
     var me=$("#username").val();
     var timeStr=$("#timeStr").val();
     var roomId = $("#roomId").val();
@@ -207,12 +238,10 @@ var checkRoom = window.setInterval(function () {
         }
     });
 
-}, 3000);
+}, 3000);*/
 
 //接收消息
-function receiveMsg(roomId, user, message) {
-    var time = message.create_time;
-    var msg = message.msg;
+function receiveMsg(roomId, user, time, msg) {
     if (msg.length > 0) {
         var html = "<div data-flex='dir:left' class='message-list-item'>" +
             "<div data-flex='dir:left' data-flex-box='0' class='message-container' style='height: auto'>" +
@@ -224,7 +253,7 @@ function receiveMsg(roomId, user, message) {
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: left;'>" +
             "<span class='message-nickname-box' style='display: block;'>" +
-            "<span class='message-nickname'>" + user + "</span>" +
+            "<span class='message-nickname'>" + user + " </span>" +
             "<span>" + time + "</span>" +
             "</span>" +
             "<div class='message'>" +
