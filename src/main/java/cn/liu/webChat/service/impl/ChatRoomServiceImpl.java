@@ -8,6 +8,7 @@ import cn.liu.webChat.mybatis_dao.IUserInfoDao;
 import cn.liu.webChat.service.IChatRoomService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -36,12 +37,12 @@ public class ChatRoomServiceImpl implements IChatRoomService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void createSingleChatRoom(Integer adminId, Integer userId) {
+    public Integer createSingleChatRoom(Integer adminId, Integer userId) {
         UserInfo userInfo = userInfoDao.findUserInfo(adminId);
         ChatRoom chatRoom = new ChatRoom();
         UserInfo obj = userInfoDao.findUserInfo(userId);
         //个人聊天
-        chatRoom.setRoom_name(obj.getUsername());
+        chatRoom.setRoom_name(userInfo.getUsername() + obj.getUsername());
         //上限2人
         chatRoom.setLimit_num(2);
         chatRoom.setIs_group(singleChat);
@@ -50,6 +51,7 @@ public class ChatRoomServiceImpl implements IChatRoomService {
         chatRoomDao.saveChatRoom(chatRoom);
         addMember(chatRoom.getId(), adminId, userInfo.getUsername(), "1");
         addMember(chatRoom.getId(), userId, userInfo.getUsername(), "0");
+        return chatRoom.getId();
 
     }
 
@@ -102,7 +104,24 @@ public class ChatRoomServiceImpl implements IChatRoomService {
     }
 
     @Override
-    public List<Map<String, Object>> findChatRoom(Integer userId) {
+    public List<ChatRoom> findChatRoom(Integer userId) {
         return chatRoomDao.findChatRooms(userId);
+    }
+
+    @Override
+    public ChatRoom findChatRoomById(Integer roomId) {
+        return chatRoomDao.findChatRoomById(roomId);
+    }
+
+    @Override
+    public Integer checkRoom(Integer adminId, Integer userId) {
+        List<Integer> rooms = chatRoomDao.findChatRoomsNotGroup(adminId);
+        List<Integer> roomList = chatRoomDao.findChatRoomsNotGroup(userId);
+        //取交集
+        rooms.retainAll(roomList);
+        if (CollectionUtils.isEmpty(rooms)) {
+            return null;
+        }
+        return rooms.get(0);
     }
 }

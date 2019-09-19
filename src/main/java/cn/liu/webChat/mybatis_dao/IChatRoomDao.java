@@ -21,7 +21,11 @@ public interface IChatRoomDao {
 
     List<RoomUser> findRoomUserByRoomId(Integer roomId);
 
-    List<Map<String, Object>> findChatRooms(Integer userId);
+    List<ChatRoom> findChatRooms(Integer userId);
 
     List<Integer> findRoomUserByRoomIdNoCurrent(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
+
+    ChatRoom findChatRoomById(Integer roomId);
+
+    List<Integer> findChatRoomsNotGroup(Integer userId);
 }

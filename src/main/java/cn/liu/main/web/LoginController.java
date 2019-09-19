@@ -18,12 +18,20 @@ public class LoginController {
     private IUserInfoService userInfoService;
 
     @RequestMapping("login")
-    public String loginPage(){
+    public String loginPage(HttpServletRequest request) {
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+        if (userInfo != null) {
+            return "redirect:/index";
+        }
         return "login";
     }
 
     @RequestMapping("/")
-    public String tologinPage(){
+    public String tologinPage(HttpServletRequest request) {
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+        if (userInfo != null) {
+            return "redirect:/index";
+        }
         return "redirect:/login";
     }
 

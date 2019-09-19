@@ -1,5 +1,8 @@
 var socket = new SockJS('http://' + document.location.host + '/sockjs/webSocketServer');
 $(document).ready(function () {
+    initChatRoom();
+
+
     //聊天窗口切换点击事件
     $(".room").click(function (e) {
         $(".room").removeClass("room_select");
@@ -33,11 +36,27 @@ socket.onopen = function () {
 socket.onmessage = function (msg) {
     var info = JSON.parse(msg.data);
     console.log("msg", msg.data);
+    var type = info.type;
     var roomId = info.roomId;
-    var nickname = info.nickname;
-    var time = info.create_time;
-    var message = info.message;
-    receiveMsg(roomId, nickname, time, message);
+    //会话置顶
+    initChatRoom(roomId);
+    //消息提醒
+    changeBgc(roomId);
+
+    if (type == 0) {
+        //新消息
+        var nickname = info.nickname;
+        var time = info.create_time;
+        var message = info.message;
+        //判断当前聊天会话界面是否属于当前聊天室
+        var currentRoomId = $("#roomId").val();
+        if (roomId == currentRoomId) {
+            //直接页面展示消息
+            receiveMsg(roomId, nickname, time, message);
+        }
+    }
+
+
 };
 
 //连接关闭
@@ -78,7 +97,7 @@ function clickIcon(roomId) {
     }
 }
 
-function hideIcon() {
+function hideIcon(roomId) {
     $("#icon").hide();
 }
 
@@ -139,16 +158,19 @@ function sendMsg(roomId, msg) {
     }
 }
 
+//type:0 表示只发送聊天消息  type:1 表示通知对方创建新的会话
 function sendToMsg(roomId, msg) {
     if (socket.readyState == 1) {
         var data = {
             roomId: roomId,
-            msg: msg
+            msg: msg,
+            type: 0
         };
         //调用后台handleTextMessage方法
         socket.send(JSON.stringify(data));
     } else {
-        alert("连接失败!");
+        $("#tip").text("连接失败");
+        $("#tipModal").modal();
     }
 }
 
@@ -184,43 +206,6 @@ Date.prototype.Format = function (fmt) {
     return fmt;
 };
 
-
-/*=========================实时监控是否有新的聊天加入=====================================*/
-/*var checkRoom = window.setInterval(function () {
-    var me=$("#username").val();
-    var timeStr=$("#timeStr").val();
-    var roomId = $("#roomId").val();
-    console.log("定时器检查是否有新消息，上一次的时间戳："+timeStr);
-    // 定时接收消息
-    $.ajax({
-        type: "post",
-        url: "/msg/receiveMsg",
-        data:{
-            timeStr: timeStr,
-            roomId: roomId
-        },
-        contentType: "application/x-www-form-urlencoded;charset=utf-8",
-        success: function (data) {
-            if(data!=null && typeof(data)!="undefined" && data!=''){
-                var status = data['status'];
-                var message = data['message'];
-                console.log(message);
-                if (status == '0') {
-                    var time = data['timeStr'];
-                    $("#timeStr").val(time);
-                    var msgList = data['datas'];
-                    for (var i = 0; i < msgList.length; i++) {
-                        var msg = msgList[i];
-                        var user = msg.nickname;
-                        receiveMsg(roomId, user, msg);
-                    }
-                }
-
-            }
-        }
-    });
-
-}, 3000);*/
 
 //接收消息
 function receiveMsg(roomId, user, time, msg) {
@@ -296,7 +281,42 @@ function searchUser() {
     });
 }
 
+//隐藏搜索结果
+function hideSearchResult() {
+    $("#search_result").hide();
+}
+
 function createRoom(userId) {
+    //判断新建的会话是否已经存在
+    $.ajax({
+        type: "post",
+        url: "/userInfo/checkRoom",
+        data: {
+            userId: userId
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data.status == '0') {
+                $("#search_result").hide();
+                var roomId = data.data;
+                var isExist = data.isExist;
+                if (isExist) {
+                    //重新加载会话列表 当前新建会话置顶
+                    initChatRoom(roomId);
+                } else {
+                    addRoom(userId);
+                }
+
+            } else {
+                $("#tip").text(data.message);
+                $("#tipModal").modal();
+            }
+        }
+    });
+
+}
+
+function addRoom(userId) {
     $.ajax({
         type: "post",
         url: "/userInfo/createSingleRoom",
@@ -305,10 +325,27 @@ function createRoom(userId) {
         },
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
         success: function (data) {
-            if (data == '0') {
-                //todo 展示会话
+            if (data.status == '0') {
+                var roomId = data.data;
+                //重新加载会话列表 当前新建会话置顶
+                initChatRoom(roomId);
+
+                //通知对方有新的会话产生  消息内容为 new_room
+                if (socket.readyState == 1) {
+                    var info = {
+                        roomId: roomId,
+                        userId: userId,
+                        type: 1
+                    };
+                    //调用后台handleTextMessage方法
+                    socket.send(JSON.stringify(info));
+                } else {
+                    $("#tip").text("连接失败");
+                    $("#tipModal").modal();
+                }
+
             } else {
-                $("#tip").text("创建对话失败");
+                $("#tip").text(data.message);
                 $("#tipModal").modal();
             }
         }

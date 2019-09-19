@@ -374,3 +374,46 @@ img {
     overflow-y: auto;
     display: none;
 }
+
+.bgc {
+    background: #72f054;
+}
+
+/*圆形*/
+.circle {
+    display: none;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background: #ff0000;
+    margin-left: 30px;
+    margin-top: 9px;
+    float: left;
+}
+
+/*聊天框滚动条样式*/
+div.chat-scroll {
+    padding-bottom: 2px;
+    min-height: 560px;
+}
+
+/*仅支持webkit内核浏览器*/
+/*高宽分别对应横竖滚动条的尺寸*/
+div.chat-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+}
+
+/*滚动条里面小方块*/
+div.chat-scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #dedcdc;
+}
+
+/*滚动条里面轨道*/
+div.chat-scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: #EDEDED;
+}

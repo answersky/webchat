@@ -19,13 +19,24 @@
         select * from room_user where room_id=#{roomId}
     </select>
 
-    <select id="findChatRooms" resultType="Map">
+    <select id="findChatRooms" resultType="cn.liu.webChat.domain.ChatRoom">
         select a.* from chat_room a left join room_user b on
         a.id=b.room_id
-        where b.user_id=#{userId} order by a.id desc
+        where b.user_id=#{userId}
+         order by a.id desc
     </select>
 
     <select id="findRoomUserByRoomIdNoCurrent" resultType="Integer">
         select user_id from room_user where room_id=#{roomId} and user_id!=#{userId}
+    </select>
+
+    <select id="findChatRoomById" resultType="cn.liu.webChat.domain.ChatRoom">
+        select * from chat_room where id=#{roomId}
+    </select>
+
+    <select id="findChatRoomsNotGroup" resultType="Integer">
+        select a.id from chat_room a left join room_user b on
+        a.id=b.room_id
+        where b.user_id=#{userId} and a.is_group=0
     </select>
 </mapper>

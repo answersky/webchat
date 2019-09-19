@@ -4,12 +4,7 @@
     <settings>
         <!-- changes from the defaults，全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。 -->
         <setting name="lazyLoadingEnabled" value="false"/>
-        <!--开启自动映射 -->
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
-    <typeAliases>
-        <package name="cn.liu.webChat.domain"/>
-    </typeAliases>
     <mappers>
         <mapper resource="mapper/UserMessageMapper.xml"/>
         <mapper resource="mapper/ChatRoomMapper.xml"/>

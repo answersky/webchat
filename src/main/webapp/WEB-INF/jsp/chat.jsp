@@ -1,12 +1,10 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<!DOCTYPE html>
-<html>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!--隐藏信息-->
 <input type="hidden" id="username" value="${username}">
 <input type="hidden" id="nickname" value="${nickname}">
-<input type="hidden" id="timeStr" value="${timeStr}">
 <input type="hidden" id="roomId" value="${room.id}">
 
 
@@ -16,7 +14,7 @@
     <span class="headbar-room-name">${room.room_name}</span>
 </div>
 <!--聊天框-->
-<div id="chat-content${roomId}" style="padding-bottom: 2px;min-height: 560px;">
+<div id="chat-content${roomId}" class="chat-scroll">
     <c:forEach items="${messages}" var="message">
         <c:if test="${message.username!=username}">
             <!--对方聊天记录 -->
@@ -113,8 +111,8 @@
         <div class="face" onclick="clickIcon(${roomId})"
              style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
     <div class="input-content" style="float: left;">
-        <input onfocus="hideIcon()" id="inputBox${roomId}"
-               onkeyup="sendInfo(${roomId})"
+        <input onfocus="hideIcon(${roomId})" id="inputBox${roomId}"
+               onkeyup="sendInfo(${roomId})" onmousedown="readMessage(${roomId})"
                type="text" placeholder="请输入">
     </div>
         <div class="send" onclick="sendBtn(${roomId})"

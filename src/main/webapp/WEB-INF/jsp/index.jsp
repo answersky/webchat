@@ -13,6 +13,7 @@
             src="${pageContext.request.contextPath}/js/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/sockjs.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/chat.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/init_chat_data.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/websockt_heart_beat.js"></script>
     <title>webchat</title>
 </head>
@@ -28,7 +29,7 @@
             <div class="member-list">
                 <div>
                     <i class="fa fa-search" id="i-advanced-search-i" onclick="searchUser()"></i>
-                    <input type="text" id="i-advanced-search" placeholder="输入关键词检索朋友">
+                    <input type="text" id="i-advanced-search" placeholder="输入关键词检索朋友" onfocus="hideSearchResult()">
                 </div>
                 <div id="search_result">
                     <ul class="friendlist-ul">
@@ -40,28 +41,15 @@
                 <span>已加入列表</span>
             </div>
 
+            <%--左侧聊天列表--%>
             <div class="friendlist-list-box">
-                <ul class="friendlist-ul">
-                    <div class="chatRoom">
-                        <c:forEach items="${rooms}" var="room">
-                            <li class="room room_select">
-                                <div style="height: 50px;width:215px">
-                                    <div class="avatar heardPic"></div>
-                                    <div style="padding: 15px 0 18px 60px;font-weight: 200;">
-                                        <span>${room.room_name}</span></div>
-                                </div>
-                            </li>
-                        </c:forEach>
-                    </div>
-                </ul>
+
             </div>
         </div>
     </div>
 
     <div class="chat-box">
-        <c:if test="${rooms!=null && rooms.size()>0}">
-            <%@ include file="chat.jsp" %>
-        </c:if>
+
     </div>
 </div>
 

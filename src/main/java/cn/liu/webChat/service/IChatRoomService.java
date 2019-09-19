@@ -16,7 +16,7 @@ public interface IChatRoomService {
      * @param adminId
      * @param userId
      */
-    void createSingleChatRoom(Integer adminId, Integer userId);
+    Integer createSingleChatRoom(Integer adminId, Integer userId);
 
     /**
      * 创建聊天室(等同于加好友)
@@ -34,5 +34,9 @@ public interface IChatRoomService {
      */
     void addMember(Integer roomId, Integer userId, String username, String is_admin);
 
-    List<Map<String, Object>> findChatRoom(Integer userId);
+    List<ChatRoom> findChatRoom(Integer userId);
+
+    ChatRoom findChatRoomById(Integer roomId);
+
+    Integer checkRoom(Integer adminId, Integer userId);
 }

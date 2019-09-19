@@ -73,25 +73,56 @@ public class ChatMessageHandler extends TextWebSocketHandler {
         Integer userId = (Integer) attributes.get("userId");
         String msgInfo = message.getPayload();
         Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(msgInfo);
-        Integer roomId = (Integer) map.get("roomId");
-        String msg = (String) map.get("msg");
-        //获取聊天室内所有的用户，给在线的用户发送消息
-        logger.error(username + "发送了一条消息：" + msg);
-        //获取昵称
-        UserInfo userInfo = userInfoService.findUserByUsername(username);
-        String nickName = userInfo.getNickname();
-        Date time = new Date();
-        //组装成消息推送给对方
-        Map<String, Object> msgMap = new LinkedHashMap<>();
-        msgMap.put("nickname", nickName);
-        msgMap.put("create_time", time);
-        msgMap.put("roomId", roomId);
-        msgMap.put("message", msg);
-        List<Integer> roomUsers = chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
-        for (Integer sessionKey : roomUsers) {
-            if (sessionMap.containsKey(sessionKey)) {
+        //type=0 聊天消息   type=1  通知对方有新的联系人加入
+        Integer type = (Integer) map.get("type");
+        if (type == 0) {
+            Integer roomId = (Integer) map.get("roomId");
+            String msg = (String) map.get("msg");
+            //获取聊天室内所有的用户，给在线的用户发送消息
+            logger.error(username + "发送了一条消息：" + msg);
+            //获取昵称
+            UserInfo userInfo = userInfoService.findUserByUsername(username);
+            String nickName = userInfo.getNickname();
+            Date time = new Date();
+            //组装成消息推送给对方
+            Map<String, Object> msgMap = new LinkedHashMap<>();
+            msgMap.put("nickname", nickName);
+            msgMap.put("create_time", time);
+            msgMap.put("roomId", roomId);
+            msgMap.put("message", msg);
+            msgMap.put("type", type);
+            List<Integer> roomUsers = chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
+            for (Integer sessionKey : roomUsers) {
+                if (sessionMap.containsKey(sessionKey)) {
+                    //获取对方的websocket 通道
+                    WebSocketSession webSocketSession = sessionMap.get(sessionKey);
+                    //给在线的用户推送消息
+                    if (webSocketSession.isOpen()) {
+                        String info = JSONUtils.toJSONString(msgMap);
+                        TextMessage textMessage = new TextMessage(info.getBytes("utf-8"));
+                        webSocketSession.sendMessage(textMessage);
+                    }
+
+                }
+            }
+
+            //保存消息记录
+            RoomMsg userMessage = new RoomMsg();
+            userMessage.setRoom_id(roomId);
+            userMessage.setUser_id(userId);
+            userMessage.setTime_str(time.getTime());
+            userMessage.setCreate_time(time);
+            userMessage.setMsg(msg);
+            chatMessageService.saveMessage(userMessage);
+        } else {
+            Integer roomId = (Integer) map.get("roomId");
+            Integer friendId = (Integer) map.get("userId");
+            Map<String, Object> msgMap = new LinkedHashMap<>();
+            msgMap.put("roomId", roomId);
+            msgMap.put("type", type);
+            if (sessionMap.containsKey(friendId)) {
                 //获取对方的websocket 通道
-                WebSocketSession webSocketSession = sessionMap.get(sessionKey);
+                WebSocketSession webSocketSession = sessionMap.get(friendId);
                 //给在线的用户推送消息
                 if (webSocketSession.isOpen()) {
                     String info = JSONUtils.toJSONString(msgMap);
@@ -102,14 +133,6 @@ public class ChatMessageHandler extends TextWebSocketHandler {
             }
         }
 
-        //保存消息记录
-        RoomMsg userMessage = new RoomMsg();
-        userMessage.setRoom_id(roomId);
-        userMessage.setUser_id(userId);
-        userMessage.setTime_str(time.getTime());
-        userMessage.setCreate_time(time);
-        userMessage.setMsg(msg);
-        chatMessageService.saveMessage(userMessage);
 
     }
 

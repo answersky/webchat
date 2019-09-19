@@ -28,7 +28,7 @@ public class ChatRoomServiceTest {
 
     @Test
     public void findRoom() {
-        List<Map<String, Object>> rooms = chatRoomService.findChatRoom(1);
+        List<ChatRoom> rooms = chatRoomService.findChatRoom(1);
         System.out.println(rooms);
     }
 }

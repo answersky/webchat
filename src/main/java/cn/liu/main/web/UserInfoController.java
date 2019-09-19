@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,17 +52,53 @@ public class UserInfoController {
 
     @RequestMapping("/createSingleRoom")
     @ResponseBody
-    public String createSingleRoom(HttpServletRequest request, Integer userId) {
+    public Map<String, Object> createSingleRoom(HttpServletRequest request, Integer userId) {
+        Map<String, Object> result = new LinkedHashMap<>();
         try {
             Integer adminId = (Integer) request.getSession().getAttribute("userId");
             if (adminId == null) {
-                return ResponseStatus.NOLOGIN;
+                result.put("status", 2);
+                result.put("message", "未登录....");
+                return result;
             }
-            chatRoomService.createSingleChatRoom(adminId, userId);
-            return ResponseStatus.SUCCESS;
+            Integer roomId = chatRoomService.createSingleChatRoom(adminId, userId);
+            result.put("status", 0);
+            result.put("data", roomId);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
+            result.put("status", 1);
+            result.put("message", "创建会话异常");
         }
-        return ResponseStatus.FAIL;
+        return result;
     }
+
+    @RequestMapping("checkRoom")
+    @ResponseBody
+    public Map<String, Object> checkRoom(HttpServletRequest request, Integer userId) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        try {
+            Integer adminId = (Integer) request.getSession().getAttribute("userId");
+            if (adminId == null) {
+                result.put("status", 2);
+                result.put("message", "未登录....");
+                return result;
+            }
+            Integer roomId = chatRoomService.checkRoom(adminId, userId);
+            result.put("status", 0);
+            if (roomId != null) {
+                result.put("isExist", true);
+            } else {
+                result.put("isExist", false);
+            }
+            result.put("data", roomId);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", 1);
+            result.put("message", "创建会话异常");
+        }
+        return result;
+    }
+
 }
