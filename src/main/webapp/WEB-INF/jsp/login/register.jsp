@@ -30,6 +30,20 @@
                 $("#name").focus();
                 return;
             }
+            if (username.length < 2) {
+                $("#tip").text("用户名长度至少是2个字符");
+                $("#tipModal").modal();
+                $("#name").focus();
+                return;
+            }
+            //验证用户名  只能是字母数字下划线组成
+            var reg = /^[_a-zA-Z0-9]+$/;
+            if (!reg.test(username)) {
+                $("#tip").text("用户名只能是字母数字下划线组成");
+                $("#tipModal").modal();
+                $("#name").focus();
+                return;
+            }
             if (password.trim().length == 0) {
                 $("#tip").text("密码不能为空");
                 $("#tipModal").modal();
