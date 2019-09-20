@@ -4,8 +4,6 @@ import cn.liu.webChat.domain.RoomMsg;
 import cn.liu.webChat.mybatis_dao.IChatRoomDao;
 import cn.liu.webChat.mybatis_dao.IRoomMsgDao;
 import cn.liu.webChat.service.IChatMessageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

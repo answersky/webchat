@@ -1,7 +1,6 @@
 package cn.liu.webChat.service.impl;
 
 import cn.liu.webChat.domain.RoomMsg;
-import cn.liu.webChat.domain.RoomUser;
 import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.mybatis_dao.IChatRoomDao;
 import cn.liu.webChat.service.IChatMessageService;
@@ -16,7 +15,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
