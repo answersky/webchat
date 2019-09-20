@@ -26,4 +26,9 @@ public class UserInfoServiceImpl implements IUserInfoService {
     public List<UserInfo> findUserByNickname(String nickname) {
         return userInfoDao.findUserByNickname(nickname);
     }
+
+    @Override
+    public void saveUser(UserInfo user) {
+        userInfoDao.saveUserInfo(user);
+    }
 }

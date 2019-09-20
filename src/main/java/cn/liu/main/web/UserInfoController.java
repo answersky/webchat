@@ -5,6 +5,7 @@ import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IUserInfoService;
 import com.alibaba.druid.support.json.JSONUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +34,8 @@ public class UserInfoController {
     public Map<String, Object> findUserByNickname(HttpServletRequest request, String nickname) {
         Map<String, Object> result = new LinkedHashMap<>();
         try {
-            Integer userId = (Integer) request.getSession().getAttribute("userId");
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            Integer userId = user.getId();
             if (userId == null) {
                 result.put("status", 2);
                 result.put("message", "未登录....");
@@ -55,7 +57,8 @@ public class UserInfoController {
     public Map<String, Object> createSingleRoom(HttpServletRequest request, Integer userId) {
         Map<String, Object> result = new LinkedHashMap<>();
         try {
-            Integer adminId = (Integer) request.getSession().getAttribute("userId");
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            Integer adminId = user.getId();
             if (adminId == null) {
                 result.put("status", 2);
                 result.put("message", "未登录....");
@@ -78,7 +81,8 @@ public class UserInfoController {
     public Map<String, Object> checkRoom(HttpServletRequest request, Integer userId) {
         Map<String, Object> result = new LinkedHashMap<>();
         try {
-            Integer adminId = (Integer) request.getSession().getAttribute("userId");
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            Integer adminId = user.getId();
             if (adminId == null) {
                 result.put("status", 2);
                 result.put("message", "未登录....");

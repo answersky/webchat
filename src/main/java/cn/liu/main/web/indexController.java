@@ -9,6 +9,7 @@ import cn.liu.webChat.service.IChatMessageService;
 import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IMessageService;
 import com.google.common.collect.Lists;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -27,8 +28,6 @@ import java.util.*;
 @Controller
 public class indexController {
     @Resource
-    private IMessageService messageService;
-    @Resource
     private IChatRoomService chatRoomService;
     @Resource
     private IChatMessageService chatMessageService;
@@ -36,8 +35,8 @@ public class indexController {
 
     @RequestMapping("index")
     public String index(Model model, HttpServletRequest request) {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) {
+        UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        if (user == null) {
             return "redirect:/login";
         }
 
@@ -46,10 +45,11 @@ public class indexController {
 
     @RequestMapping("/findChatRooms")
     public String findChatRooms(Model model, HttpServletRequest request, Integer roomId) {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) {
+        UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        if (user == null) {
             return "redirect:/login";
         }
+        Integer userId = user.getId();
         List<ChatRoom> chatRooms = chatRoomService.findChatRoom(userId);
         //如果roomId不为空，则需要置顶当前roomId
         if (roomId != null && !CollectionUtils.isEmpty(chatRooms)) {
@@ -71,15 +71,14 @@ public class indexController {
 
     @RequestMapping("/findChatMessage")
     public String findChatMessage(Model model, HttpServletRequest request, Integer roomId) {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) {
+        UserInfo userInfo = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        if (userInfo == null) {
             return "redirect:/login";
         }
         ChatRoom chatRoom = chatRoomService.findChatRoomById(roomId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("room", chatRoom);
-        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
-        String username = (String) request.getSession().getAttribute("username");
+        String username = userInfo.getUsername();
         model.addAttribute("username", username);
         model.addAttribute("nickname", userInfo.getNickname());
         List<Map<String, Object>> roomMsgs = chatMessageService.initMessage(roomId, 0);

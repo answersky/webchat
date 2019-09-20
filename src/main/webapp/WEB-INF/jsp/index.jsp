@@ -24,6 +24,9 @@
             <div class="selfinfo-avatar">
                 <div class="avatar"></div>
             </div>
+            <div class="login_out">
+                <i class="fa fa-power-off fa-2x"></i>
+            </div>
         </div>
         <div class="member-box">
             <div class="member-list">

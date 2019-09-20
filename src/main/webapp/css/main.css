@@ -417,3 +417,15 @@ div.chat-scroll::-webkit-scrollbar-track {
     border-radius: 10px;
     background: #EDEDED;
 }
+
+/*退出按钮*/
+div.login_out {
+    position: absolute;
+    bottom: 2px;
+    margin-left: 14px;
+    color: #d91e1e;
+}
+
+div.login_out:hover {
+    cursor: pointer;
+}

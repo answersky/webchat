@@ -2,14 +2,15 @@ var socket = new SockJS('http://' + document.location.host + '/sockjs/webSocketS
 $(document).ready(function () {
     initChatRoom();
 
+    //退出
+    $("div.login_out").click(function () {
+        window.location.href = "/logout";
+    });
 
     //聊天窗口切换点击事件
     $(".room").click(function (e) {
         $(".room").removeClass("room_select");
         $(this).addClass("room_select");
-
-        //TODO 切换聊天窗口
-
     });
 
     //隐藏左侧菜单

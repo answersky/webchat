@@ -12,4 +12,6 @@ public interface IUserInfoService {
     UserInfo findUserByUsername(String username);
 
     List<UserInfo> findUserByNickname(String nickname);
+
+    void saveUser(UserInfo user);
 }

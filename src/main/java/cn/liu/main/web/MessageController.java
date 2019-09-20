@@ -3,8 +3,10 @@ package cn.liu.main.web;
 import cn.liu.main.common.ResponseStatus;
 import cn.liu.webChat.domain.Message;
 import cn.liu.webChat.domain.RoomMsg;
+import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.service.IChatMessageService;
 import cn.liu.webChat.service.IMessageService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +35,8 @@ public class MessageController {
     @RequestMapping("sendMessage")
     @ResponseBody
     public String sendMessage(HttpServletRequest request, Integer roomId, String msg) {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        Integer userId = user.getId();
         if (userId == null) {
             return ResponseStatus.NOLOGIN;
         }
@@ -53,7 +56,8 @@ public class MessageController {
     @ResponseBody
     public Map<String, Object> receiveMsg(HttpServletRequest request, long timeStr, Integer roomId) {
         Map<String, Object> result = new LinkedHashMap<>();
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        Integer userId = user.getId();
         if (userId == null) {
             result.put("status", 2);
             result.put("message", "未登录....");
