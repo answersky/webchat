@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!--隐藏信息-->
 <input type="hidden" id="username" value="${username}">
 <input type="hidden" id="nickname" value="${nickname}">
@@ -37,7 +38,13 @@
                 </span>
                         <div class="message">
                     <span>
+                        <%--不包含图片则原样输入html代码--%>
+                        <c:if test="${fn:contains(message.msg,'<img')==false}">
+                            ${fn:escapeXml(message.msg)}
+                        </c:if>
+                        <c:if test="${fn:contains(message.msg,'<img')==true}">
                             ${message.msg}
+                        </c:if>
                     </span>
                             <div class="triangle-left-outer"></div>
                             <div class="triangle-left-inner"></div>
@@ -63,7 +70,14 @@
                              <span>${message.create_time}</span>
                          </span>
                         <div class="message">
-                            <span>${message.msg}</span>
+                            <span>
+                                <c:if test="${fn:contains(message.msg,'<img')==false}">
+                                    ${fn:escapeXml(message.msg)}
+                                </c:if>
+                                <c:if test="${fn:contains(message.msg,'<img')==true}">
+                                    ${message.msg}
+                                </c:if>
+                            </span>
                             <div class="triangle-right-outer"></div>
                             <div class="triangle-right-inner"></div>
                         </div>
@@ -73,41 +87,40 @@
         </c:if>
     </c:forEach>
 
-
-
-
 </div>
 
-<div id="icon${roomId}" class="icon" style="display: none;">
+<%--默认自带的表情icon--%>
+<div id="icon" class="icon" style="display: none;">
     <ul>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="懵逼" src="${pageContext.request.contextPath}/css/img/1.png">
+            <img title="懵逼" src="${pageContext.request.contextPath}/css/img/face_icon/1.png">
         </li>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="疑问" src="${pageContext.request.contextPath}/css/img/10.png">
+            <img title="疑问" src="${pageContext.request.contextPath}/css/img/face_icon/10.png">
         </li>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="美味" src="${pageContext.request.contextPath}/css/img/11.png">
+            <img title="美味" src="${pageContext.request.contextPath}/css/img/face_icon/11.png">
         </li>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="没兴趣" src="${pageContext.request.contextPath}/css/img/12.png">
+            <img title="没兴趣" src="${pageContext.request.contextPath}/css/img/face_icon/12.png">
         </li>
     </ul>
     <ul>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="发呆" src="${pageContext.request.contextPath}/css/img/13.png">
+            <img title="发呆" src="${pageContext.request.contextPath}/css/img/face_icon/13.png">
         </li>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="流鼻血" src="${pageContext.request.contextPath}/css/img/15.png">
+            <img title="流鼻血" src="${pageContext.request.contextPath}/css/img/face_icon/15.png">
         </li>
         <li class="faceLi" onclick="sendImg(this,${roomId})">
-            <img title="赞" src="${pageContext.request.contextPath}/css/img/18.png">
+            <img title="赞" src="${pageContext.request.contextPath}/css/img/face_icon/18.png">
         </li>
     </ul>
 </div>
 <!--对话输入框-->
 <div id="chat-input${roomId}">
-    <div style="height: 32px">
+    <div style="clear: both"></div>
+    <div>
         <div class="face" onclick="clickIcon(${roomId})"
              style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
     <div class="input-content" style="float: left;">
@@ -119,19 +132,9 @@
              style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
     </div>
 
-    <%--<p id="inputBox" style="width:980px; height:100px; border:1px solid #dddddd;background-color: #ffffff" contenteditable="true"></p>--%>
-
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("div.chat-box").click(function () {
-            $("#icon").hide();
-        });
-
-        $("div.member-box").click(function () {
-            $("#icon").hide();
-        });
-
         var roomId = $("#roomId").val();
         checkScrollStyle(roomId);
         scrollBottom(roomId);

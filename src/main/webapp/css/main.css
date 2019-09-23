@@ -311,7 +311,7 @@ input {
 }
 
 .icon {
-    position: fixed;
+    position: absolute;
     margin-top: -230px;
     width: 520px;
     height: 220px;

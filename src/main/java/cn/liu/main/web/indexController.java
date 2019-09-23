@@ -1,26 +1,21 @@
 package cn.liu.main.web;
 
 import cn.liu.webChat.domain.ChatRoom;
-import cn.liu.webChat.domain.Message;
-import cn.liu.webChat.domain.RoomMsg;
 import cn.liu.webChat.domain.UserInfo;
-import cn.liu.webChat.mybatis_dao.IChatRoomDao;
 import cn.liu.webChat.service.IChatMessageService;
 import cn.liu.webChat.service.IChatRoomService;
-import cn.liu.webChat.service.IMessageService;
 import com.google.common.collect.Lists;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuf on 2016/9/3.

@@ -85,50 +85,52 @@ function sendBtn(roomId) {
 
 //表情消息发送
 function sendImg(own, roomId) {
+    $("#icon").hide();
     var img = $(own).html();
     sendMsg(roomId, img);
 }
 
 //表情按钮
-function clickIcon(roomId) {
-    if ($("#icon" + roomId).is(":hidden")) {
-        $("#icon" + roomId).show();
+function clickIcon() {
+    if ($("#icon").is(":hidden")) {
+        $("#icon").show();
     } else {
-        $("#icon" + roomId).hide();
+        $("#icon").hide();
     }
 }
 
-function hideIcon(roomId) {
+function hideIcon() {
     $("#icon").hide();
 }
 
 //输入文字发送表情
 function isImg(msg) {
     if (msg == '/懵逼') {
-        return '<img title="懵逼" src="/css/img/1.png">';
+        return '<img title="懵逼" src="/css/img/face_icon/1.png">';
     }
     if (msg == '/疑问' || msg == '/?') {
-        return '<img title="疑问" src="/css/img/10.png">';
+        return '<img title="疑问" src="/css/img/face_icon/10.png">';
     }
     if (msg == '/美味' || msg == '/吃') {
-        return '<img  title="美味" src="/css/img/11.png">';
+        return '<img  title="美味" src="/css/img/face_icon/11.png">';
     }
     if (msg == '/没兴趣') {
-        return '<img title="没兴趣" src="/css/img/12.png">';
+        return '<img title="没兴趣" src="/css/img/face_icon/12.png">';
     }
     if (msg == '/发呆') {
-        return '<img title="发呆" src="/css/img/13.png">';
+        return '<img title="发呆" src="/css/img/face_icon/13.png">';
     }
     if (msg == '/流鼻血' || msg == '/色') {
-        return '<img  title="流鼻血" src="/css/img/15.png">';
+        return '<img  title="流鼻血" src="/css/img/face_icon/15.png">';
     }
     if (msg == '/赞' || msg == '/棒' || msg == 'good') {
-        return '<img title="赞" src="/css/img/18.png">';
+        return '<img title="赞" src="/css/img/face_icon/18.png">';
     }
     return msg;
 }
 
 function sendMsg(roomId, msg) {
+    msg = changeHtml(msg);
     var me = $("#nickname").val();
     var time = new Date().Format("yyyy-MM-dd hh:mm:ss");
     if (msg.length > 0) {
@@ -144,12 +146,17 @@ function sendMsg(roomId, msg) {
             "<span class='message-nickname'>" + me + " </span>" +
             "<span>" + time + "</span>" +
             "</span>" +
-            "<div class='message'>" +
-            "<span>" + msg + "</span>" +
-            "<div class='triangle-right-outer'></div>" +
+            "<div class='message'>";
+        if (msg.indexOf("<img") < 0) {
+            var html = "<span><pre>" + msg + "</pre></span>";
+        } else {
+            var html = "<span>" + msg + "</span>";
+        }
+        model = model + html;
+        var html2 = "<div class='triangle-right-outer'></div>" +
             "<div class='triangle-right-inner'></div>" +
             "</div> </div> </div> </div>";
-
+        model = model + html2;
         $("#chat-content" + roomId).append(model);
         checkScrollStyle(roomId);
         scrollBottom(roomId);
@@ -157,6 +164,14 @@ function sendMsg(roomId, msg) {
 
         sendToMsg(roomId, msg);
     }
+}
+
+function changeHtml(msg) {
+    if (msg.indexOf("<img") < 0) {
+        msg = msg.replaceAll("<", "&lt;");
+        msg = msg.replaceAll(">", "&gt;");
+    }
+    return msg;
 }
 
 //type:0 表示只发送聊天消息  type:1 表示通知对方创建新的会话
@@ -210,6 +225,7 @@ Date.prototype.Format = function (fmt) {
 
 //接收消息
 function receiveMsg(roomId, user, time, msg) {
+    msg = changeHtml(msg);
     if (msg.length > 0) {
         var html = "<div data-flex='dir:left' class='message-list-item'>" +
             "<div data-flex='dir:left' data-flex-box='0' class='message-container' style='height: auto'>" +
@@ -224,12 +240,17 @@ function receiveMsg(roomId, user, time, msg) {
             "<span class='message-nickname'>" + user + " </span>" +
             "<span>" + time + "</span>" +
             "</span>" +
-            "<div class='message'>" +
-            "<span>" + msg + "</span>" +
-            "<div class='triangle-left-outer'></div>" +
+            "<div class='message'>";
+        if (msg.indexOf("<img") < 0) {
+            var html2 = "<span><pre>" + msg + "</pre></span>";
+        } else {
+            var html2 = "<span>" + msg + "</span>";
+        }
+        html = html + html2;
+        var html3 = "<div class='triangle-left-outer'></div>" +
             "<div class='triangle-left-inner'></div>" +
             "</div></div></div></div>";
-
+        html = html + html3;
         $("#chat-content" + roomId).append(html);
         checkScrollStyle(roomId);
         scrollBottom(roomId);
