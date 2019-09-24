@@ -168,8 +168,8 @@ function sendMsg(roomId, msg) {
 
 function changeHtml(msg) {
     if (msg.indexOf("<img") < 0) {
-        msg = msg.replaceAll("<", "&lt;");
-        msg = msg.replaceAll(">", "&gt;");
+        msg = msg.replace(/</g, "&lt;");
+        msg = msg.replace(/>/g, "&gt;");
     }
     return msg;
 }

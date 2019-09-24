@@ -104,6 +104,12 @@ public class ChatMessageHandler extends TextWebSocketHandler {
                 }
             }
 
+            //页面发送html消息转义
+            if (msg.contains("&lt;") || msg.contains("&gt;")) {
+                msg = msg.replaceAll("&lt;", "<");
+                msg = msg.replaceAll("&gt;", ">");
+            }
+
             //保存消息记录
             RoomMsg userMessage = new RoomMsg();
             userMessage.setRoom_id(roomId);
