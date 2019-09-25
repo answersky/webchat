@@ -9,10 +9,12 @@ import cn.liu.webChat.service.IChatRoomService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -122,5 +124,19 @@ public class ChatRoomServiceImpl implements IChatRoomService {
             return null;
         }
         return rooms.get(0);
+    }
+
+    @Override
+    public boolean checkRoomOnline(Integer userId) {
+        Map<Integer, WebSocketSession> sessionMap = ChatMessageHandler.sessionMap;
+        if (!CollectionUtils.isEmpty(sessionMap)) {
+            return sessionMap.containsKey(userId);
+        }
+        return false;
+    }
+
+    @Override
+    public List<Integer> findRoomUserByRoomIdNoCurrent(Integer roomId, Integer userId) {
+        return chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
     }
 }

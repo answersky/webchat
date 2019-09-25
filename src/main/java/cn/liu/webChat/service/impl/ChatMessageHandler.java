@@ -39,7 +39,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
     /**
      * key is userId  value is WebSocketSession
      */
-    private static Map<Integer, WebSocketSession> sessionMap = new LinkedHashMap<>();
+    static Map<Integer, WebSocketSession> sessionMap = new LinkedHashMap<>();
 
     /**
      * 连接成功
@@ -66,34 +66,68 @@ public class ChatMessageHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        Map<String, Object> attributes = session.getAttributes();
-        String username = (String) attributes.get("username");
-        Integer userId = (Integer) attributes.get("userId");
-        String msgInfo = message.getPayload();
-        Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(msgInfo);
-        //type=0 聊天消息   type=1  通知对方有新的联系人加入
-        Integer type = (Integer) map.get("type");
-        if (type == 0) {
-            Integer roomId = (Integer) map.get("roomId");
-            String msg = (String) map.get("msg");
-            //获取聊天室内所有的用户，给在线的用户发送消息
-            logger.error(username + "发送了一条消息：" + msg);
-            //获取昵称
-            UserInfo userInfo = userInfoService.findUserByUsername(username);
-            String nickName = userInfo.getNickname();
-            Date time = new Date();
-            //组装成消息推送给对方
-            Map<String, Object> msgMap = new LinkedHashMap<>();
-            msgMap.put("nickname", nickName);
-            msgMap.put("create_time", time);
-            msgMap.put("roomId", roomId);
-            msgMap.put("message", msg);
-            msgMap.put("type", type);
-            List<Integer> roomUsers = chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
-            for (Integer sessionKey : roomUsers) {
-                if (sessionMap.containsKey(sessionKey)) {
+        try {
+            Map<String, Object> attributes = session.getAttributes();
+            String username = (String) attributes.get("username");
+            Integer userId = (Integer) attributes.get("userId");
+            String msgInfo = message.getPayload();
+            Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(msgInfo);
+            //type=0 聊天消息   type=1  通知对方有新的联系人加入
+            Integer type = (Integer) map.get("type");
+            if (type == 0) {
+                Integer roomId = Integer.parseInt(String.valueOf(map.get("roomId")));
+                String msg = (String) map.get("msg");
+                //获取聊天室内所有的用户，给在线的用户发送消息
+                logger.error(username + "发送了一条消息：" + msg);
+                //获取昵称
+                UserInfo userInfo = userInfoService.findUserByUsername(username);
+                String nickName = userInfo.getNickname();
+                Date time = new Date();
+                //组装成消息推送给对方
+                Map<String, Object> msgMap = new LinkedHashMap<>();
+                msgMap.put("nickname", nickName);
+                msgMap.put("create_time", time);
+                msgMap.put("roomId", roomId);
+                msgMap.put("message", msg);
+                msgMap.put("type", type);
+                List<Integer> roomUsers = chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
+                for (Integer sessionKey : roomUsers) {
+                    if (sessionMap.containsKey(sessionKey)) {
+                        //获取对方的websocket 通道
+                        WebSocketSession webSocketSession = sessionMap.get(sessionKey);
+                        //给在线的用户推送消息
+                        if (webSocketSession.isOpen()) {
+                            String info = JSONUtils.toJSONString(msgMap);
+                            TextMessage textMessage = new TextMessage(info.getBytes("utf-8"));
+                            webSocketSession.sendMessage(textMessage);
+                        }
+
+                    }
+                }
+
+                //页面发送html消息转义
+                if (msg.contains("&lt;") || msg.contains("&gt;")) {
+                    msg = msg.replaceAll("&lt;", "<");
+                    msg = msg.replaceAll("&gt;", ">");
+                }
+
+                //保存消息记录
+                RoomMsg userMessage = new RoomMsg();
+                userMessage.setRoom_id(roomId);
+                userMessage.setUser_id(userId);
+                userMessage.setTime_str(time.getTime());
+                userMessage.setCreate_time(time);
+                userMessage.setMsg(msg);
+                chatMessageService.saveMessage(userMessage);
+            } else {
+                Integer roomId = (Integer) map.get("roomId");
+                Integer friendId = (Integer) map.get("userId");
+                Map<String, Object> msgMap = new LinkedHashMap<>();
+                msgMap.put("roomId", roomId);
+                msgMap.put("type", type);
+                if (sessionMap.containsKey(friendId)) {
                     //获取对方的websocket 通道
-                    WebSocketSession webSocketSession = sessionMap.get(sessionKey);
+                    WebSocketSession webSocketSession = sessionMap.get(friendId);
                     //给在线的用户推送消息
                     if (webSocketSession.isOpen()) {
                         String info = JSONUtils.toJSONString(msgMap);
@@ -103,38 +137,8 @@ public class ChatMessageHandler extends TextWebSocketHandler {
 
                 }
             }
-
-            //页面发送html消息转义
-            if (msg.contains("&lt;") || msg.contains("&gt;")) {
-                msg = msg.replaceAll("&lt;", "<");
-                msg = msg.replaceAll("&gt;", ">");
-            }
-
-            //保存消息记录
-            RoomMsg userMessage = new RoomMsg();
-            userMessage.setRoom_id(roomId);
-            userMessage.setUser_id(userId);
-            userMessage.setTime_str(time.getTime());
-            userMessage.setCreate_time(time);
-            userMessage.setMsg(msg);
-            chatMessageService.saveMessage(userMessage);
-        } else {
-            Integer roomId = (Integer) map.get("roomId");
-            Integer friendId = (Integer) map.get("userId");
-            Map<String, Object> msgMap = new LinkedHashMap<>();
-            msgMap.put("roomId", roomId);
-            msgMap.put("type", type);
-            if (sessionMap.containsKey(friendId)) {
-                //获取对方的websocket 通道
-                WebSocketSession webSocketSession = sessionMap.get(friendId);
-                //给在线的用户推送消息
-                if (webSocketSession.isOpen()) {
-                    String info = JSONUtils.toJSONString(msgMap);
-                    TextMessage textMessage = new TextMessage(info.getBytes("utf-8"));
-                    webSocketSession.sendMessage(textMessage);
-                }
-
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -149,6 +153,8 @@ public class ChatMessageHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        exception.printStackTrace();
+        logger.error("websocket异常：" + exception.getMessage());
         exitChat(session);
     }
 
@@ -161,6 +167,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+        logger.error("链接退出原因：" + closeStatus.getReason());
         exitChat(session);
     }
 
@@ -177,10 +184,5 @@ public class ChatMessageHandler extends TextWebSocketHandler {
         sessionMap.remove(userId);
         logger.error(username + "退出聊天");
     }
-
-    /*public void clearSessionByUserId(Integer userId,String username){
-        sessionMap.remove(userId);
-        logger.error(username + "退出聊天");
-    }*/
 
 }

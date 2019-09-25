@@ -54,6 +54,9 @@
     <div class="chat-box">
 
     </div>
+    <div class="right-info">
+
+    </div>
 </div>
 
 <%--提示框--%>

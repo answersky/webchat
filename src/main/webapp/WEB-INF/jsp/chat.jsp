@@ -13,6 +13,15 @@
 <div id="chat-head">
     <div class="chat-avatar"></div>
     <span class="headbar-room-name">${room.room_name}</span>
+    <%--在线--%>
+    <c:if test="${online!=null && online}">
+        <i class="fa fa-desktop" style="color: #069AFF;"></i>
+    </c:if>
+    <%--不在线--%>
+    <c:if test="${online!=null && !online}">
+        <i class="fa fa-desktop"></i>
+    </c:if>
+
 </div>
 <!--聊天框-->
 <div id="chat-content${roomId}" class="chat-scroll">
@@ -118,13 +127,13 @@
     </ul>
 </div>
 <!--对话输入框-->
-<div id="chat-input${roomId}">
+<div id="chat-input">
     <div style="clear: both"></div>
     <div>
         <div class="face" onclick="clickIcon(${roomId})"
              style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
     <div class="input-content" style="float: left;">
-        <input onfocus="hideIcon(${roomId})" id="inputBox${roomId}"
+        <input onfocus="hideIcon(${roomId},${room.is_group})" id="inputBox"
                onkeyup="sendInfo(${roomId})" onmousedown="readMessage(${roomId})"
                type="text" placeholder="请输入">
     </div>
@@ -133,6 +142,7 @@
     </div>
 
 </div>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/clipboard.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var roomId = $("#roomId").val();

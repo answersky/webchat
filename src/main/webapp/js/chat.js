@@ -70,7 +70,7 @@ function sendInfo(roomId) {
     if (event.keyCode == 13) {
         console.log("触发输入框回车事件，发送信息.");
         //发送信息
-        var msg = $("#inputBox" + roomId).val();
+        var msg = $("#inputBox").val();
         msg = isImg(msg);
         sendMsg(roomId, msg);
     }
@@ -78,7 +78,7 @@ function sendInfo(roomId) {
 
 //发送信息按钮
 function sendBtn(roomId) {
-    var msg = $("#inputBox" + roomId).val();
+    var msg = $("#inputBox").val();
     msg = isImg(msg);
     sendMsg(roomId, msg);
 }
@@ -99,8 +99,31 @@ function clickIcon() {
     }
 }
 
-function hideIcon() {
+function hideIcon(roomId, is_group) {
     $("#icon").hide();
+    //非群聊校验是否在线
+    if (is_group == 0) {
+        checkOnline(roomId);
+    }
+}
+
+//检查是否在线
+function checkOnline(roomId) {
+    $.ajax({
+        type: "post",
+        url: "/checkOnline",
+        data: {
+            roomId: roomId
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data) {
+                $("#chat-head i").css("color", "#069AFF");
+            } else {
+                $("#chat-head i").css("color", "rgba(157, 155, 156, 0.9)");
+            }
+        }
+    });
 }
 
 //输入文字发送表情
@@ -160,7 +183,7 @@ function sendMsg(roomId, msg) {
         $("#chat-content" + roomId).append(model);
         checkScrollStyle(roomId);
         scrollBottom(roomId);
-        $("#inputBox" + roomId).val("");
+        $("#inputBox").val("");
 
         sendToMsg(roomId, msg);
     }

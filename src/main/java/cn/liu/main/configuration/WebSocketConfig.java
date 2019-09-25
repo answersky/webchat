@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 /**
  * created by liufeng
@@ -31,6 +31,19 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatMessageHandler, "/webSocketServer").addInterceptors(new ChatHandshakeInterceptor());
         registry.addHandler(chatMessageHandler, "/sockjs/webSocketServer").addInterceptors(new ChatHandshakeInterceptor()).withSockJS();
+    }
+
+    /**
+     * 配置websocket可以发送消息的大小
+     *
+     * @return
+     */
+    @Bean
+    public ServletServerContainerFactoryBean createServletServerContainerFactoryBean() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(400000);
+        container.setMaxBinaryMessageBufferSize(400000);
+        return container;
     }
 
 }

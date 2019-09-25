@@ -3,7 +3,6 @@ package cn.liu.webChat.service;
 import cn.liu.webChat.domain.ChatRoom;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * created by liufeng
@@ -19,7 +18,7 @@ public interface IChatRoomService {
     Integer createSingleChatRoom(Integer adminId, Integer userId);
 
     /**
-     * 创建聊天室(等同于加好友)
+     * 创建聊天室(等同于建群)
      *
      * @param adminId
      * @param userId
@@ -39,4 +38,14 @@ public interface IChatRoomService {
     ChatRoom findChatRoomById(Integer roomId);
 
     Integer checkRoom(Integer adminId, Integer userId);
+
+    /**
+     * 检查是否在线
+     *
+     * @param userId
+     * @return
+     */
+    boolean checkRoomOnline(Integer userId);
+
+    List<Integer> findRoomUserByRoomIdNoCurrent(Integer roomId, Integer userId);
 }

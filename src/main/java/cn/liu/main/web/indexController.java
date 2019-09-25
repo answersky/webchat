@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,15 @@ public class indexController {
         ChatRoom chatRoom = chatRoomService.findChatRoomById(roomId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("room", chatRoom);
+
+        //判断当前room是否是群
+        if ("0".equals(chatRoom.getIs_group())) {
+            //不是群聊天室则userIds只有1个
+            List<Integer> userIds = chatRoomService.findRoomUserByRoomIdNoCurrent(roomId, userInfo.getId());
+            boolean online = chatRoomService.checkRoomOnline(userIds.get(0));
+            model.addAttribute("online", online);
+        }
+
         String username = userInfo.getUsername();
         model.addAttribute("username", username);
         model.addAttribute("nickname", userInfo.getNickname());
@@ -86,4 +96,21 @@ public class indexController {
     }
 
 
+    @RequestMapping("/checkOnline")
+    @ResponseBody
+    public boolean checkOnline(Integer roomId) {
+        boolean online = false;
+        try {
+            UserInfo userInfo = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            if (userInfo == null) {
+                return false;
+            }
+            //前端已经控制当前聊天室是非群聊
+            List<Integer> userIds = chatRoomService.findRoomUserByRoomIdNoCurrent(roomId, userInfo.getId());
+            online = chatRoomService.checkRoomOnline(userIds.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return online;
+    }
 }

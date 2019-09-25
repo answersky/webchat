@@ -433,3 +433,15 @@ div.login_out:hover {
 pre {
     margin: 0 0 0;
 }
+
+#chat-head i {
+    margin-left: 10px;
+    color: rgba(157, 155, 156, 0.9);
+
+}
+
+div.right-info {
+    float: left;
+    width: 35%;
+    min-height: 650px;
+}
