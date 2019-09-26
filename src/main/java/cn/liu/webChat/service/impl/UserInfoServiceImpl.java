@@ -1,11 +1,15 @@
 package cn.liu.webChat.service.impl;
 
+import cn.liu.webChat.domain.ChatRoom;
 import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.mybatis_dao.IUserInfoDao;
+import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IUserInfoService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +20,8 @@ import java.util.List;
 public class UserInfoServiceImpl implements IUserInfoService {
     @Resource
     private IUserInfoDao userInfoDao;
+    @Resource
+    private IChatRoomService chatRoomService;
 
     @Override
     public UserInfo findUserByUsername(String username) {
@@ -30,5 +36,26 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Override
     public void saveUser(UserInfo user) {
         userInfoDao.saveUserInfo(user);
+    }
+
+    /**
+     * 好友列表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<UserInfo> friends(Integer userId) {
+        List<UserInfo> userInfos = new ArrayList<>();
+        List<ChatRoom> chatRooms = chatRoomService.findChatRoom(userId);
+        if (!CollectionUtils.isEmpty(chatRooms)) {
+            List<Integer> roomIds = new ArrayList<>();
+            for (ChatRoom chatRoom : chatRooms) {
+                Integer rId = chatRoom.getId();
+                roomIds.add(rId);
+            }
+            userInfos = userInfoDao.findFrineds(roomIds, userId);
+        }
+        return userInfos;
     }
 }

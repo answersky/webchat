@@ -6,6 +6,7 @@ import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.mybatis_dao.IChatRoomDao;
 import cn.liu.webChat.mybatis_dao.IUserInfoDao;
 import cn.liu.webChat.service.IChatRoomService;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -65,11 +66,14 @@ public class ChatRoomServiceImpl implements IChatRoomService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void createGroupChatRoom(Integer roomId, Integer adminId, Integer userId) {
+    public Integer createGroupChatRoom(Integer roomId, Integer adminId, Integer userId) {
         UserInfo userInfo = userInfoDao.findUserInfo(adminId);
         ChatRoom chatRoom = new ChatRoom();
-        //建群
-        chatRoom.setRoom_name(adminId + userId + "");
+        FastDateFormat fastDateFormat = FastDateFormat.getInstance("mm:ss");
+        String time = fastDateFormat.format(new Date());
+        time = time.replace(":", "");
+        //建群(默认群名为创建人id+时间戳)
+        chatRoom.setRoom_name(userInfo.getUsername() + "_group" + time);
         //群上限200人
         chatRoom.setLimit_num(200);
         chatRoom.setIs_group(groupChat);
@@ -84,6 +88,7 @@ public class ChatRoomServiceImpl implements IChatRoomService {
             addMember(chatRoom.getId(), roomUserUserId, userInfo.getUsername(), is_admin);
         }
         addMember(chatRoom.getId(), userId, userInfo.getUsername(), "0");
+        return chatRoom.getId();
     }
 
     /**

@@ -17,4 +17,14 @@
     <select id="findUserByNickname" resultType="cn.liu.webChat.domain.UserInfo">
         select * from user_info where nickname like '%${nickname}%'
     </select>
+
+    <select id="findFrineds" resultType="cn.liu.webChat.domain.UserInfo">
+        select * from user_info where id in(
+        select user_id from room_user where room_id in
+        <foreach collection="roomIds" item="roomId" open="(" close=")" separator=",">
+            #{roomId}
+        </foreach>
+        and user_id!=#{userId}
+        )
+    </select>
 </mapper>

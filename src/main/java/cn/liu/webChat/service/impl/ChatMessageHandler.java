@@ -9,6 +9,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -120,22 +121,27 @@ public class ChatMessageHandler extends TextWebSocketHandler {
                 userMessage.setMsg(msg);
                 chatMessageService.saveMessage(userMessage);
             } else {
-                Integer roomId = (Integer) map.get("roomId");
-                Integer friendId = (Integer) map.get("userId");
+                Integer roomId = Integer.parseInt(String.valueOf(map.get("roomId")));
+                List<Integer> friendIds = chatRoomDao.findRoomUserByRoomIdNoCurrent(roomId, userId);
                 Map<String, Object> msgMap = new LinkedHashMap<>();
                 msgMap.put("roomId", roomId);
                 msgMap.put("type", type);
-                if (sessionMap.containsKey(friendId)) {
-                    //获取对方的websocket 通道
-                    WebSocketSession webSocketSession = sessionMap.get(friendId);
-                    //给在线的用户推送消息
-                    if (webSocketSession.isOpen()) {
-                        String info = JSONUtils.toJSONString(msgMap);
-                        TextMessage textMessage = new TextMessage(info.getBytes("utf-8"));
-                        webSocketSession.sendMessage(textMessage);
-                    }
+                if (!CollectionUtils.isEmpty(friendIds)) {
+                    for (Integer friendId : friendIds) {
+                        if (sessionMap.containsKey(friendId)) {
+                            //获取对方的websocket 通道
+                            WebSocketSession webSocketSession = sessionMap.get(friendId);
+                            //给在线的用户推送消息
+                            if (webSocketSession.isOpen()) {
+                                String info = JSONUtils.toJSONString(msgMap);
+                                TextMessage textMessage = new TextMessage(info.getBytes("utf-8"));
+                                webSocketSession.sendMessage(textMessage);
+                            }
 
+                        }
+                    }
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();

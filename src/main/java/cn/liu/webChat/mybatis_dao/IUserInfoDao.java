@@ -17,4 +17,6 @@ public interface IUserInfoDao {
     UserInfo findUserByUsername(String username);
 
     List<UserInfo> findUserByNickname(@Param("nickname") String nickname);
+
+    List<UserInfo> findFrineds(@Param("roomIds") List<Integer> roomIds, @Param("userId") Integer userId);
 }

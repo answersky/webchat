@@ -25,7 +25,7 @@ function showChatMessage(roomId) {
         type: "POST",
         data: {roomId: roomId},
         dataType: "html",
-        async: true,
+        async: false,
         success: function (data) {
             $("div.chat-box").html(data);
         }

@@ -23,7 +23,7 @@ public interface IChatRoomService {
      * @param adminId
      * @param userId
      */
-    void createGroupChatRoom(Integer roomId, Integer adminId, Integer userId);
+    Integer createGroupChatRoom(Integer roomId, Integer adminId, Integer userId);
 
     /**
      * 添加成员
@@ -48,4 +48,5 @@ public interface IChatRoomService {
     boolean checkRoomOnline(Integer userId);
 
     List<Integer> findRoomUserByRoomIdNoCurrent(Integer roomId, Integer userId);
+
 }

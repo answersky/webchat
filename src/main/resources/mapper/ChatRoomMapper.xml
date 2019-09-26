@@ -39,4 +39,5 @@
         a.id=b.room_id
         where b.user_id=#{userId} and a.is_group=0
     </select>
+
 </mapper>

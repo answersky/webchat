@@ -22,6 +22,7 @@
         <i class="fa fa-desktop"></i>
     </c:if>
 
+    <i class="fa fa-user-plus" id="addGroup" style="color: #069AFF;" onclick="addGroup()"></i>
 </div>
 <!--聊天框-->
 <div id="chat-content${roomId}" class="chat-scroll">
@@ -142,6 +143,8 @@
     </div>
 
 </div>
+
+<%@ include file="addGroup.jsp" %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/clipboard.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {

@@ -374,12 +374,94 @@ function addRoom(userId) {
                 var roomId = data.data;
                 //重新加载会话列表 当前新建会话置顶
                 initChatRoom(roomId);
+                //初始化新聊天窗口
+                showChatMessage(roomId);
 
                 //通知对方有新的会话产生  消息内容为 new_room
                 if (socket.readyState == 1) {
                     var info = {
                         roomId: roomId,
                         userId: userId,
+                        type: 1
+                    };
+                    //调用后台handleTextMessage方法
+                    socket.send(JSON.stringify(info));
+                } else {
+                    $("#tip").text("连接失败");
+                    $("#tipModal").modal();
+                }
+
+            } else {
+                $("#tip").text(data.message);
+                $("#tipModal").modal();
+            }
+        }
+    });
+}
+
+
+//-----------------------------------建群--------------------------------------
+function addGroup() {
+    var roomId = $("#roomId").val();
+    //获取好友列表
+    $.ajax({
+        type: "post",
+        url: "/userInfo/friendList",
+        data: {
+            roomId: roomId
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data.status == '0') {
+                var friendList = data.data;
+                if (friendList != null && friendList.length > 0) {
+                    $("div.friends").html("");
+                    for (var i = 0; i < friendList.length; i++) {
+                        //展示选择项
+                        var username = friendList[i].username;
+                        var userId = friendList[i].id;
+                        var html = '<li class="room room_select" onclick="createGroup(' + userId + ')">' +
+                            '                                    <div style="height: 50px;width:180px">' +
+                            '                                        <div class="avatar heardPic"></div>' +
+                            '                                        <span style="line-height: 50px;margin-left: 10px;">' + username + '</span>' +
+                            '                                    </div>' +
+                            '                                </li>';
+                        $("div.friends").append(html);
+                    }
+                    $("#groupModal").modal();
+                }
+            } else {
+                $("#tip").text(data.message);
+                $("#tipModal").modal();
+            }
+        }
+    });
+
+}
+
+function createGroup(userId) {
+    $("#groupModal").modal("hide");
+    var roomId = $("#roomId").val();
+    $.ajax({
+        type: "post",
+        url: "/userInfo/createGroupRoom",
+        data: {
+            userId: userId,
+            roomId: roomId
+        },
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        success: function (data) {
+            if (data.status == '0') {
+                var roomId = data.data;
+                //重新加载会话列表 当前新建会话置顶
+                initChatRoom(roomId);
+                //初始化新聊天窗口
+                showChatMessage(roomId);
+
+                //通知对方有新的会话产生  消息内容为 new_room
+                if (socket.readyState == 1) {
+                    var info = {
+                        roomId: roomId,
                         type: 1
                     };
                     //调用后台handleTextMessage方法

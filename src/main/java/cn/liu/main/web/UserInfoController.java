@@ -1,12 +1,11 @@
 package cn.liu.main.web;
 
-import cn.liu.main.common.ResponseStatus;
 import cn.liu.webChat.domain.UserInfo;
 import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IUserInfoService;
-import com.alibaba.druid.support.json.JSONUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -105,4 +104,76 @@ public class UserInfoController {
         return result;
     }
 
+    /**
+     * 建群
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/createGroupRoom")
+    @ResponseBody
+    public Map<String, Object> createGroupRoom(HttpServletRequest request, Integer roomId, Integer userId) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        try {
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            Integer adminId = user.getId();
+            if (adminId == null) {
+                result.put("status", 2);
+                result.put("message", "未登录....");
+                return result;
+            }
+            Integer groupId = chatRoomService.createGroupChatRoom(roomId, adminId, userId);
+            result.put("status", 0);
+            result.put("data", groupId);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", 1);
+            result.put("message", "创建会话异常");
+        }
+        return result;
+    }
+
+
+    /**
+     * 好友列表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/friendList")
+    @ResponseBody
+    public Map<String, Object> friendList(HttpServletRequest request, Integer roomId) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        try {
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            Integer adminId = user.getId();
+            if (adminId == null) {
+                result.put("status", 2);
+                result.put("message", "未登录....");
+                return result;
+            }
+            List<UserInfo> friendList = new ArrayList<>();
+            List<UserInfo> userInfos = userInfoService.friends(adminId);
+            List<Integer> ids = chatRoomService.findRoomUserByRoomIdNoCurrent(roomId, adminId);
+            if (!CollectionUtils.isEmpty(userInfos) && !CollectionUtils.isEmpty(ids)) {
+                for (UserInfo userInfo : userInfos) {
+                    Integer userId = userInfo.getId();
+                    if (!ids.contains(userId)) {
+                        friendList.add(userInfo);
+                    }
+                }
+            }
+
+            result.put("status", 0);
+            result.put("data", friendList);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", 1);
+            result.put("message", "获取好友列表异常");
+        }
+        return result;
+    }
 }
