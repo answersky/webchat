@@ -3,6 +3,7 @@ package cn.liu.webChat.service;
 import cn.liu.webChat.domain.UserInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -16,4 +17,8 @@ public interface IUserInfoService {
     void saveUser(UserInfo user);
 
     List<UserInfo> friends(Integer userId);
+
+    void updateInfo(UserInfo userInfo);
+
+    List<Map<String, Object>> findRoomMember(Integer roomId);
 }

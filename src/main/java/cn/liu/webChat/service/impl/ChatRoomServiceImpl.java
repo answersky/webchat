@@ -51,7 +51,7 @@ public class ChatRoomServiceImpl implements IChatRoomService {
         chatRoom.setCreate_time(new Date());
         chatRoom.setCreate_user(userInfo.getUsername());
         chatRoomDao.saveChatRoom(chatRoom);
-        addMember(chatRoom.getId(), adminId, userInfo.getUsername(), "1");
+        addMember(chatRoom.getId(), adminId, userInfo.getUsername(), "2");
         addMember(chatRoom.getId(), userId, userInfo.getUsername(), "0");
         return chatRoom.getId();
 

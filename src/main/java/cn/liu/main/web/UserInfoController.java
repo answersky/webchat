@@ -5,7 +5,9 @@ import cn.liu.webChat.service.IChatRoomService;
 import cn.liu.webChat.service.IUserInfoService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * created by liufeng
@@ -175,5 +178,72 @@ public class UserInfoController {
             result.put("message", "获取好友列表异常");
         }
         return result;
+    }
+
+    @RequestMapping("/updateUserInfo")
+    @ResponseBody
+    public Map<String, Object> updateUserInfo(String nickname, String age, String phone, String address) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        try {
+            UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setId(user.getId());
+            userInfo.setNickname(nickname);
+            if (!StringUtils.isEmpty(phone)) {
+                //校验手机号
+                String regexp = "^1[3456789]\\d{9}$";
+                if (!Pattern.matches(regexp, phone)) {
+                    result.put("message", "手机号格式不正确");
+                    result.put("status", "2");
+                    return result;
+                }
+                userInfo.setPhone(phone);
+            }
+            if (!StringUtils.isEmpty(age)) {
+                String re = "^[1-9]\\d*$";
+                if (!Pattern.matches(re, age)) {
+                    result.put("message", "请输入正常的年龄值");
+                    result.put("status", "2");
+                    return result;
+                }
+                userInfo.setAge(Integer.parseInt(age));
+            }
+
+            userInfo.setAddress(address);
+            userInfoService.updateInfo(userInfo);
+            result.put("message", "更新成功");
+            result.put("status", "0");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", 1);
+            result.put("message", "更新用户信息异常");
+        }
+        return result;
+    }
+
+    @RequestMapping("/findMember")
+    public String findMember(Model model, Integer roomId) {
+        UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentId = user.getId();
+        List<Map<String, Object>> members = userInfoService.findRoomMember(roomId);
+        //判断当前用户是否是群主
+        boolean is_admin_flag = false;
+        if (!CollectionUtils.isEmpty(members)) {
+            for (Map<String, Object> map : members) {
+                Integer id = Integer.parseInt(String.valueOf(map.get("id")));
+                String is_admin = (String) map.get("is_admin");
+                //判断是否在线
+                boolean online = chatRoomService.checkRoomOnline(id);
+                map.put("online", online);
+
+                if (currentId == id && "2".equals(is_admin)) {
+                    is_admin_flag = true;
+                }
+            }
+        }
+        model.addAttribute("members", members);
+        model.addAttribute("is_admin", is_admin_flag);
+        return "right_group_list";
     }
 }

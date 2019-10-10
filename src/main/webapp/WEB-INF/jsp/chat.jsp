@@ -1,5 +1,4 @@
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -20,6 +19,11 @@
     <%--不在线--%>
     <c:if test="${online!=null && !online}">
         <i class="fa fa-desktop"></i>
+    </c:if>
+
+    <%--查询群成员--%>
+    <c:if test="${room.is_group==1}">
+        <i class="fa fa-users" id="groupMember" style="color: #069AFF;" onclick="showMember()"></i>
     </c:if>
 
     <i class="fa fa-user-plus" id="addGroup" style="color: #069AFF;" onclick="addGroup()"></i>

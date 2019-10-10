@@ -125,6 +125,7 @@
                     </div>
                     <div>
                         昵<span style="margin-left: 15px"></span>称：<input type="text" name="nickname"
+                                                                         maxlength="7"
                                                                          class="pwd form-control"
                                                                          id="nickname">
                     </div>

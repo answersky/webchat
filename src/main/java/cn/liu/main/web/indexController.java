@@ -35,7 +35,7 @@ public class indexController {
         if (user == null) {
             return "redirect:/login";
         }
-
+        model.addAttribute("user", user);
         return "index";
     }
 

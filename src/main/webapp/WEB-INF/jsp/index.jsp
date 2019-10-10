@@ -22,7 +22,7 @@
     <div class="outer">
         <div class="left-box">
             <div class="selfinfo-avatar">
-                <div class="avatar"></div>
+                <div class="avatar" onclick="showUserInfo()"></div>
             </div>
             <div class="login_out">
                 <i class="fa fa-power-off fa-2x"></i>

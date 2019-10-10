@@ -27,4 +27,26 @@
         and user_id!=#{userId}
         )
     </select>
+
+    <update id="updateInfo">
+        update user_info set update_time=now()
+        <if test="nickname!=null and nickname!=''">
+            ,nickname=#{nickname}
+        </if>
+        <if test="phone!=null and phone!=''">
+            ,phone=#{phone}
+        </if>
+        <if test="age!=null">
+            ,age=#{age}
+        </if>
+        <if test="address!=null and address!=''">
+            ,address=#{address}
+        </if>
+        where id=#{id}
+    </update>
+
+    <select id="findRoomMember" resultType="Map">
+        select a.*,b.is_admin from user_info a left join room_user b on a.id=b.user_id
+        where room_id =#{roomId} order by b.is_admin desc
+    </select>
 </mapper>

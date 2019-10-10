@@ -1,6 +1,9 @@
 var socket = new SockJS('http://' + document.location.host + '/sockjs/webSocketServer');
 $(document).ready(function () {
+
     initChatRoom();
+
+    initEvent();
 
     //退出
     $("div.login_out").click(function () {
@@ -27,6 +30,61 @@ $(document).ready(function () {
     });
 
 });
+
+function showUserInfo() {
+    $("#updateInfoModal").modal();
+}
+
+function initEvent() {
+    //保存用户信息
+    $("#updateInfoModal input").blur(function () {
+        var nickname = $.trim($("#nickname").val());
+        var phone = $.trim($("#phone").val());
+        var age = $.trim($("#age").val());
+        var address = $.trim($("#address").val());
+        if (nickname == null && nickname == '') {
+            $("#tip").text("昵称不能为空");
+            $("#tipModal").modal();
+            return;
+        }
+        //验证手机号格式
+        if (phone.trim().length > 0) {
+            var regex = /^1[3456789]\d{9}$/;
+            if (!regex.test(phone)) {
+                $("#tip").text("手机号格式不正确");
+                $("#tipModal").modal();
+                $("#phone").focus();
+                return;
+            }
+        }
+        //验证年龄是否是数字
+        if (age.trim().length > 0) {
+            var ageRegex = /^[1-9]\d*$/;
+            if (!ageRegex.test(age)) {
+                $("#tip").text("请输入正常的年龄值");
+                $("#tipModal").modal();
+                $("#age").focus();
+                return;
+            }
+        }
+        $.ajax({
+            url: "/userInfo/updateUserInfo",
+            type: "POST",
+            data: {
+                nickname: nickname,
+                phone: phone,
+                age: age,
+                address: address
+            },
+            success: function (data) {
+                $("#updateInfoModal").modal("hide");
+                $("#tip").text(data.message);
+                $("#tipModal").modal();
+            }
+        });
+    });
+}
+
 
 //打开连接
 socket.onopen = function () {
@@ -475,6 +533,21 @@ function createGroup(userId) {
                 $("#tip").text(data.message);
                 $("#tipModal").modal();
             }
+        }
+    });
+}
+
+//查看群好友
+function showMember() {
+    var roomId = $("#roomId").val();
+    $.ajax({
+        url: "/userInfo/findMember",
+        type: "POST",
+        data: {roomId: roomId},
+        dataType: "html",
+        async: false,
+        success: function (data) {
+            $("div.right-info").html(data);
         }
     });
 }

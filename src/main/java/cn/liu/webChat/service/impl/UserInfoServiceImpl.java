@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * created by liufeng
@@ -57,5 +58,21 @@ public class UserInfoServiceImpl implements IUserInfoService {
             userInfos = userInfoDao.findFrineds(roomIds, userId);
         }
         return userInfos;
+    }
+
+    @Override
+    public void updateInfo(UserInfo userInfo) {
+        userInfoDao.updateInfo(userInfo);
+    }
+
+    /**
+     * 查看聊天室成员
+     *
+     * @param roomId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> findRoomMember(Integer roomId) {
+        return userInfoDao.findRoomMember(roomId);
     }
 }
