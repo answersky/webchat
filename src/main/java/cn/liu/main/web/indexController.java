@@ -86,6 +86,7 @@ public class indexController {
         String username = userInfo.getUsername();
         model.addAttribute("username", username);
         model.addAttribute("nickname", userInfo.getNickname());
+        model.addAttribute("picUrl", userInfo.getPhoto_address());
         List<Map<String, Object>> roomMsgs = chatMessageService.initMessage(roomId, 0);
         if (!CollectionUtils.isEmpty(roomMsgs)) {
             //保证消息展示的顺序是正常（按照时间先后）

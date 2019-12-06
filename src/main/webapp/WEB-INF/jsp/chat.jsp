@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!--隐藏信息-->
+<input type="hidden" id="pic" value="${picUrl}">
 <input type="hidden" id="username" value="${username}">
 <input type="hidden" id="nickname" value="${nickname}">
 <input type="hidden" id="roomId" value="${room.id}">
@@ -38,9 +39,16 @@
                     <div data-flex-box="0" data-flex="main:top cross:top" class="avatar-container"
                          style="float: left">
                         <div>
-                            <div class="avatar"
-                                 style="width: 39px; height: 39px;
-                                         background-image: url('${pageContext.request.contextPath}/css/img/toux.jpg');"></div>
+                            <c:if test="${message.photo_address==null}">
+                                <div class="avatar"
+                                     style="width: 39px; height: 39px;
+                                             background-image: url('${pageContext.request.contextPath}/css/img/toux.jpg');"></div>
+                            </c:if>
+                            <c:if test="${message.photo_address!=null && message.photo_address!=''}">
+                                <div class="avatar"
+                                     style="width: 39px; height: 39px;
+                                             background-image: url('${message.photo_address}');"></div>
+                            </c:if>
                         </div>
                     </div>
                     <div style="padding: 0px 50px; width: 100%; text-align: left;">
@@ -73,9 +81,16 @@
                 <div data-flex="dir:right" data-flex-box="0" class="message-container" style="height: auto">
                     <div data-flex-box="0" data-flex="main:top cross:top" class="avatar-container" style="float: right">
                         <div>
-                            <div class="avatar"
-                                 style="width: 39px; height: 39px;
-                                         background-image: url('${pageContext.request.contextPath}/css/img/toux.jpg');"></div>
+                            <c:if test="${message.photo_address==null}">
+                                <div class="avatar"
+                                     style="width: 39px; height: 39px;
+                                             background-image: url('${pageContext.request.contextPath}/css/img/toux.jpg');"></div>
+                            </c:if>
+                            <c:if test="${message.photo_address!=null && message.photo_address!=''}">
+                                <div class="avatar"
+                                     style="width: 39px; height: 39px;
+                                             background-image: url('${message.photo_address}');"></div>
+                            </c:if>
                         </div>
                     </div>
                     <div style="padding: 0px 50px; width: 100%; text-align: right;">

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <div class="modal fade" id="tipModal" tabindex="-1" role="dialog"
      aria-labelledby="modalLabel" aria-hidden="true" style="width: 229px;margin: 0px auto;">
@@ -41,7 +42,21 @@
                 <div class="panel">
                     <div class="panel-body">
                         <div class="row" style="margin-bottom: 10px;">
-                            <div class="avatar" style="margin: -20px auto 0;width: 100px;height: 100px;"></div>
+                            <c:if test="${user.photo_address!=null && user.photo_address!=''}">
+                                <div class="defalut_avatar"
+                                     style="margin: -20px auto 0;width: 100px;height: 100px;background-image: url('${user.photo_address}')"
+                                ></div>
+                            </c:if>
+                            <c:if test="${user.photo_address==null}">
+                                <div class="avatar" style="margin: -20px auto 0;width: 100px;height: 100px;"
+                                ></div>
+                            </c:if>
+                            <label for="headpic">
+                                <input type="button" id="btn" style="margin-top: 5px;padding: 5px 10px;background: #00c4f0;color: #FFF;
+                                border: none;border-radius: 5px;margin-left: 120px;" value="点我上传"><span
+                                    id="text"></span>
+                                <input type="file" id="headpic" onchange="fileUpload('headpic')">
+                            </label>
                         </div>
                         <div class="row" style="margin: 0 auto;">
                             <label>昵称</label>

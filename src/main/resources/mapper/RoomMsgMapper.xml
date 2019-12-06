@@ -7,7 +7,7 @@
     </insert>
 
     <select id="initMsg" resultType="Map">
-        select a.*,b.room_name,c.username,c.nickname from room_msg a left join chat_room b on a.room_id=b.id
+        select a.*,b.room_name,c.username,c.nickname,c.photo_address from room_msg a left join chat_room b on a.room_id=b.id
         left join user_info c on a.user_id=c.id
         where a.room_id=#{roomId}
         order by a.create_time desc limit #{index},20

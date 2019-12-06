@@ -42,6 +42,9 @@
         <if test="address!=null and address!=''">
             ,address=#{address}
         </if>
+        <if test="photo_address!=null and photo_address!=''">
+            ,photo_address=#{photo_address}
+        </if>
         where id=#{id}
     </update>
 

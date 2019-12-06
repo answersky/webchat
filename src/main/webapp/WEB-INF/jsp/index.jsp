@@ -15,6 +15,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/chat.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/init_chat_data.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/websockt_heart_beat.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/pic_upload.js"></script>
     <title>webchat</title>
 </head>
 <body>
@@ -22,7 +23,13 @@
     <div class="outer">
         <div class="left-box">
             <div class="selfinfo-avatar">
-                <div class="avatar" onclick="showUserInfo()"></div>
+                <c:if test="${user.photo_address!=null && user.photo_address!=''}">
+                    <div class="defalut_avatar" style="background-image: url('${user.photo_address}')"
+                         onclick="showUserInfo()"></div>
+                </c:if>
+                <c:if test="${user.photo_address==null}">
+                    <div class="avatar" onclick="showUserInfo()"></div>
+                </c:if>
             </div>
             <div class="login_out">
                 <i class="fa fa-power-off fa-2x"></i>

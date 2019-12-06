@@ -1,5 +1,8 @@
 package cn.liu.main.web;
 
+import cn.liu.webChat.domain.UserInfo;
+import cn.liu.webChat.service.IUserInfoService;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -25,7 +28,17 @@ public class FileUploadController {
     private Logger logger = LoggerFactory.getLogger(FileUploadController.class);
     @Resource
     private Environment environment;
+    @Resource
+    private IUserInfoService userInfoService;
 
+    /**
+     * 上传头像
+     *
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/fileUpload")
     @ResponseBody
     public String fileUpload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
@@ -49,6 +62,11 @@ public class FileUploadController {
                 fos = new FileOutputStream(path + fName);
                 fos.write(bytes);
                 url = host + fName;
+
+                //更新用户的图片地址
+                UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+                user.setPhoto_address(url);
+                userInfoService.updateInfo(user);
 
             } catch (IOException e) {
                 e.printStackTrace();

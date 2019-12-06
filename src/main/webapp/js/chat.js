@@ -105,13 +105,14 @@ socket.onmessage = function (msg) {
     if (type == 0) {
         //新消息
         var nickname = info.nickname;
+        var head_pic = info.photo_address;
         var time = info.create_time;
         var message = info.message;
         //判断当前聊天会话界面是否属于当前聊天室
         var currentRoomId = $("#roomId").val();
         if (roomId == currentRoomId) {
             //直接页面展示消息
-            receiveMsg(roomId, nickname, time, message);
+            receiveMsg(roomId, nickname, time, message, head_pic);
         }
     }
 
@@ -213,13 +214,18 @@ function isImg(msg) {
 function sendMsg(roomId, msg) {
     msg = changeHtml(msg);
     var me = $("#nickname").val();
+    var pic = $("#pic").val();
     var time = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    var headPic = "/css/img/toux.jpg";
+    if (pic != null && pic != '') {
+        headPic = pic;
+    }
     if (msg.length > 0) {
         var model = "<div data-flex='dir:right' class='message-list-item'>" +
             "<div data-flex='dir:right' data-flex-box='0' class='message-container' style='height: auto'>" +
             "<div data-flex-box='0' data-flex='main:top cross:top' class='avatar-container' style='float: right'>" +
             "<div>" +
-            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;/css/img/toux.jpg&quot;);'></div>" +
+            "<div class='avatar' style='width: 39px; height: 39px; background-image: url(&quot;" + headPic + "&quot;);'></div>" +
             "</div>" +
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: right;'>" +
@@ -305,7 +311,12 @@ Date.prototype.Format = function (fmt) {
 
 
 //接收消息
-function receiveMsg(roomId, user, time, msg) {
+function receiveMsg(roomId, user, time, msg, head_pic) {
+    //默认图片
+    var head_pic_url = "/css/img/toux.jpg";
+    if (head_pic != null && head_pic != '') {
+        head_pic_url = head_pic;
+    }
     msg = changeHtml(msg);
     if (msg.length > 0) {
         var html = "<div data-flex='dir:left' class='message-list-item'>" +
@@ -313,7 +324,7 @@ function receiveMsg(roomId, user, time, msg) {
             "<div data-flex-box='0' data-flex='main:top cross:top' class='avatar-container' style='float: left'>" +
             "<div>" +
             "<div class='avatar'" +
-            "style='width: 39px; height: 39px; background-image: url(&quot;/css/img/toux.jpg&quot;);'></div>" +
+            "style='width: 39px; height: 39px; background-image: url(&quot;" + head_pic_url + "&quot;);'></div>" +
             "</div>" +
             "</div>" +
             "<div style='padding: 0px 50px; width: 100%; text-align: left;'>" +

@@ -87,6 +87,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
                 //组装成消息推送给对方
                 Map<String, Object> msgMap = new LinkedHashMap<>();
                 msgMap.put("nickname", nickName);
+                msgMap.put("photo_address", userInfo.getPhoto_address());
                 msgMap.put("create_time", time);
                 msgMap.put("roomId", roomId);
                 msgMap.put("message", msg);
