@@ -71,10 +71,10 @@ function initEvent() {
             url: "/userInfo/updateUserInfo",
             type: "POST",
             data: {
-                nickname: nickname,
+                nickname: encodeURI(nickname),
                 phone: phone,
                 age: age,
-                address: address
+                address: encodeURI(address)
             },
             success: function (data) {
                 $("#updateInfoModal").modal("hide");
@@ -177,9 +177,9 @@ function checkOnline(roomId) {
         contentType: "application/x-www-form-urlencoded;charset=utf-8",
         success: function (data) {
             if (data) {
-                $("#chat-head i").css("color", "#069AFF");
+                $("#chat-head i.fa-desktop").css("color", "#069AFF");
             } else {
-                $("#chat-head i").css("color", "rgba(157, 155, 156, 0.9)");
+                $("#chat-head i.fa-desktop").css("color", "rgba(157, 155, 156, 0.9)");
             }
         }
     });
@@ -266,7 +266,7 @@ function sendToMsg(roomId, msg) {
     if (socket.readyState == 1) {
         var data = {
             roomId: roomId,
-            msg: msg,
+            msg: encodeURI(msg),
             type: 0
         };
         //调用后台handleTextMessage方法
@@ -287,8 +287,8 @@ function scrollBottom(roomId) {
 //控制滚动条样式，在没有超出范围高度的时候隐藏滚动条样式
 function checkScrollStyle(roomId) {
     var height = $("#chat-content" + roomId).height();
-    if (height > 560) {
-        $("#chat-content" + roomId).css({"overflow-y": "scroll", "max-height": "560px"});
+    if (height > 460) {
+        $("#chat-content" + roomId).css({"overflow-y": "scroll", "max-height": "460px"});
     }
 }
 

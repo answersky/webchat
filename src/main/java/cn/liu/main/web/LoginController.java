@@ -13,10 +13,10 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.misc.Regexp;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -123,6 +123,7 @@ public class LoginController {
                 return result;
             }
             String nickname = map.get("nickname");
+            nickname = URLDecoder.decode(nickname, "utf-8");
             String age = map.get("age");
             String re = "^[1-9]\\d*$";
             if (!Pattern.matches(re, age)) {
@@ -131,6 +132,7 @@ public class LoginController {
                 return result;
             }
             String address = map.get("address");
+            address = URLDecoder.decode(address, "utf-8");
             UserInfo user = new UserInfo();
             user.setUsername(username);
             user.setPassword(pass);

@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <head>
+    <link rel="icon" href="${pageContext.request.contextPath}/css/img/bee.jpg" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css"
           href="${pageContext.request.contextPath}/css/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.css">

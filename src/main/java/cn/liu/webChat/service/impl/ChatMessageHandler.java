@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -78,6 +79,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
             if (type == 0) {
                 Integer roomId = Integer.parseInt(String.valueOf(map.get("roomId")));
                 String msg = (String) map.get("msg");
+                msg = URLDecoder.decode(msg, "utf-8");
                 //获取聊天室内所有的用户，给在线的用户发送消息
                 logger.error(username + "发送了一条消息：" + msg);
                 //获取昵称

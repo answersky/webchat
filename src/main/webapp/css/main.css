@@ -28,7 +28,7 @@ body {
 }
 
 /*去掉输入框默认选中外边的蓝色框框*/
-input {
+input, textarea {
     outline: none;
 }
 
@@ -43,7 +43,7 @@ input {
 
 .member-box, .left-box, .chat-box {
     height: 100%;
-    min-height: 650px;
+    min-height: 657px;
     float: left;
 }
 
@@ -119,12 +119,11 @@ input {
         min-width: 600px;
     }
 
-    .input-content input {
-        width: 500px;
+    .input-content textarea {
+        width: 600px;
         font-size: 1rem;
-        height: 33px;
-        margin-top: 2px;
-        padding-right: 29px;
+        resize: none;
+        border: none;
     }
 }
 
@@ -139,12 +138,11 @@ input {
         min-width: 400px;
     }
 
-    .input-content input {
-        width: 400px;
+    .input-content textarea {
+        width: 600px;
         font-size: 1rem;
-        height: 33px;
-        margin-top: 2px;
-        padding-right: 29px;
+        resize: none;
+        border: none;
     }
 }
 
@@ -191,12 +189,11 @@ input {
         min-width: 1623px;
     }
 
-    .input-content input {
+    .input-content textarea {
         width: 1024px;
         font-size: 1rem;
-        height: 33px;
-        margin-top: 2px;
-        padding-right: 29px;
+        resize: none;
+        border: none;
     }
 }
 .listitem-li{
@@ -213,13 +210,13 @@ input {
     background: #f8f9fa;
 }
 
-.face{
+.face, .file-pic {
     cursor: pointer;
     background-repeat: no-repeat;
-    background-image: url("../css/img/face1.png");
 }
-.face:hover{
-    background-image: url("../css/img/face2.png");
+
+.face:hover, .file-pic:hover {
+    color: #0b8ad4;
 }
 .send{
     cursor: pointer;
@@ -406,7 +403,7 @@ img {
 /*聊天框滚动条样式*/
 div.chat-scroll {
     padding-bottom: 2px;
-    min-height: 560px;
+    min-height: 465px;
 }
 
 /*仅支持webkit内核浏览器*/
@@ -454,7 +451,6 @@ pre {
 
 div.right-info {
     float: left;
-    width: 35%;
     min-height: 650px;
 }
 
@@ -519,7 +515,7 @@ label {
     position: relative;
 }
 
-#headpic {
+#headpic, #chatPic {
     position: absolute;
     left: 0;
     top: 0;
@@ -528,4 +524,9 @@ label {
 
 #text {
     color: red;
+}
+
+#chat-input {
+    background: #ffffff;
+    height: 135px;
 }

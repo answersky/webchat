@@ -149,22 +149,29 @@
 <!--对话输入框-->
 <div id="chat-input">
     <div style="clear: both"></div>
-    <div>
-        <div class="face" onclick="clickIcon(${roomId})"
-             style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
-    <div class="input-content" style="float: left;">
-        <input onfocus="hideIcon(${roomId},${room.is_group})" id="inputBox"
-               onkeyup="sendInfo(${roomId})" onmousedown="readMessage(${roomId})"
-               type="text" placeholder="请输入">
+    <div id="chat-file-list">
+        <i class="fa fa-smile-o fa-2x face" onclick="clickIcon(${roomId})"></i>
+        <label for="chatPic" class="file-pic">
+            <i class="fa fa-file-image-o fa-2x" aria-hidden="true"></i>
+            <input type="file" id="chatPic" onchange="chatPicUpload('chatPic')">
+        </label>
+
     </div>
+    <div class="input-content">
+        <textarea onfocus="hideIcon(${roomId},${room.is_group})" id="inputBox"
+                  onkeyup="sendInfo(${roomId})" onmousedown="readMessage(${roomId})"
+                  type="text" placeholder=""></textarea>
+    </div>
+    <div class="sendBtn">
         <div class="send" onclick="sendBtn(${roomId})"
-             style="float: left;margin-left:5px;width: 40px;height: 40px;"></div>
+             style="float: right;width: 40px;height: 30px;"></div>
     </div>
 
 </div>
 
 <%@ include file="addGroup.jsp" %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/clipboard.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/pic_upload.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var roomId = $("#roomId").val();

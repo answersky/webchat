@@ -50,14 +50,7 @@ public class FileUploadController {
         if (!file.isEmpty()) {
             FileOutputStream fos = null;
             try {
-                String fName = "";
-                String orgiginalFileName = file.getOriginalFilename();
-                if (orgiginalFileName.contains(".")) {
-                    int indexdot = orgiginalFileName.indexOf(".");
-                    String suffix = orgiginalFileName.substring(indexdot);
-                    String uuid = UUID.randomUUID().toString();
-                    fName = uuid + suffix;
-                }
+                String fName = formatPicName(file);
                 byte[] bytes = file.getBytes();
                 fos = new FileOutputStream(path + fName);
                 fos.write(bytes);
@@ -83,4 +76,55 @@ public class FileUploadController {
         return url;
     }
 
+    /**
+     * 上传聊天图片
+     *
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/chatPicUpload")
+    @ResponseBody
+    public String chatPicUpload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+        String url = null;
+        //文件存放的路径
+        String path = environment.getProperty("save_chat_img_path");
+        String host = environment.getProperty("visit_chat_img_url");
+
+        if (!file.isEmpty()) {
+            FileOutputStream fos = null;
+            try {
+                String fName = formatPicName(file);
+                byte[] bytes = file.getBytes();
+                fos = new FileOutputStream(path + fName);
+                fos.write(bytes);
+                url = host + fName;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return url;
+    }
+
+    private String formatPicName(MultipartFile file) {
+        String fName = "";
+        String orgiginalFileName = file.getOriginalFilename();
+        if (orgiginalFileName.contains(".")) {
+            int indexdot = orgiginalFileName.indexOf(".");
+            String suffix = orgiginalFileName.substring(indexdot);
+            String uuid = UUID.randomUUID().toString();
+            fName = uuid + suffix;
+        }
+        return fName;
+    }
 }

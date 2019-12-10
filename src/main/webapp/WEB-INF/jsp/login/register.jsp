@@ -81,9 +81,9 @@
                 username: username,
                 password: password,
                 phone: phone,
-                nickname: nickname,
+                nickname: encodeURI(nickname),
                 age: age,
-                address: address
+                address: encodeURI(address)
             };
             $.ajax({
                 type: "post",

@@ -2,7 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 
 <ul class="friendlist-ul">
-    <div class="chatRoom" style="width: 230px;margin-left: 5px;">
+    <div class="chatRoom" style="margin-left: 5px;">
         <c:if test="${members!=null && members.size()>0}">
             <c:forEach items="${members}" var="member">
                 <li class="room room_select" id="room" style="background: #f8f9fa;margin-top: 5px;float: none;">

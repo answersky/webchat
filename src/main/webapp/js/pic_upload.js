@@ -52,3 +52,30 @@ function validateFile(file) {
     }
     return true;
 }
+
+
+//聊天框发送图片
+function chatPicUpload(fileId) {
+    var fd = new FormData();
+    var file = $("#" + fileId).get(0).files[0];
+    if (!validateFile(file)) {
+        return;
+    }
+    fd.append("file", file);
+    $.ajax({
+        url: "/file/chatPicUpload",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: fd,
+        success: function (result) {
+            console.log("chat img url:" + result);
+            if (result) {
+                var mes = "<img width='300' height='400' src='" + result + "'>";
+                //发送消息
+                var roomId = $("#roomId").val();
+                sendMsg(roomId, mes);
+            }
+        }
+    });
+}

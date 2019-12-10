@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -186,6 +187,8 @@ public class UserInfoController {
         Map<String, Object> result = new LinkedHashMap<>();
 
         try {
+            nickname = URLDecoder.decode(nickname, "utf-8");
+            address = URLDecoder.decode(address, "utf-8");
             UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
             UserInfo userInfo = new UserInfo();
             userInfo.setId(user.getId());
