@@ -54,7 +54,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
         Map<String, Object> attributes = session.getAttributes();
         String username = (String) attributes.get("username");
         Integer userId = (Integer) attributes.get("userId");
-        logger.error(username + "连接上服务");
+        logger.error(username + "链接上服务");
         sessionMap.put(userId, session);
         logger.error("当前存在的socket服务" + sessionMap);
     }
@@ -176,7 +176,7 @@ public class ChatMessageHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        logger.error("链接退出原因：" + closeStatus.getReason());
+        logger.error("服务退出原因：" + closeStatus.getReason());
         exitChat(session);
     }
 

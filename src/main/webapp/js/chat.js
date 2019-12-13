@@ -127,9 +127,11 @@ socket.onclose = function () {
 //发送快捷键 回车
 function sendInfo(roomId) {
     if (event.keyCode == 13) {
-        console.log("触发输入框回车事件，发送信息.");
         //发送信息
         var msg = $("#inputBox").val();
+        if ($.trim(msg) == '') {
+            return;
+        }
         msg = isImg(msg);
         sendMsg(roomId, msg);
     }
@@ -138,6 +140,9 @@ function sendInfo(roomId) {
 //发送信息按钮
 function sendBtn(roomId) {
     var msg = $("#inputBox").val();
+    if ($.trim(msg) == '') {
+        return;
+    }
     msg = isImg(msg);
     sendMsg(roomId, msg);
 }
